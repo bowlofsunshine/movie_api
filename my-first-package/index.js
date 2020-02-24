@@ -84,8 +84,8 @@ app.get("/movies", function(req, res) {
   res.send("check out my fav mooooovies!");
 });
 
-app.get('/documentation', function(req, res) {
-  res.sendFile('public/documentation.html', { root : __dirname });
+app.get("/documentation", function(req, res) {
+  res.sendFile("public/documentation.html", { root: __dirname });
 });
 
 app.get("/movies/:title", (req, res) => {
