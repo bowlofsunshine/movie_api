@@ -1,158 +1,220 @@
-const express = require("express"),
-  bodyParser = require("body-parser"),
-  uuid = require("uuid");
-
+const express = require("express");
+const bodyParser = require("body-parser");
+const uuid = require("uuid");
+const mongoose = require("mongoose");
 const app = express();
+const Models = require("./models.js");
+const Movies = Models.Movie;
+const Users = Models.User;
 
 app.use(bodyParser.json());
-
-let Movies = [
-  {
-    title: "Little Miss Sunshine",
-    description:
-      "A family determined to get their young daughter into the finals of a beauty pageant take a cross-country trip in their VW bus.",
-    genre: "Comedy-Drama",
-    director: "Valerie Faris",
-    imageURL: "img/littlemisssunshine.png"
-  },
-  {
-    title: "Inglorious Bastards",
-    description:
-      "In Nazi-occupied France during World War II, a plan to assassinate Nazi leaders by a group of Jewish U.S. soldiers coincides with a theatre owner's vengeful plans for the same.",
-    genre: "Quentin Tarantino",
-    director: "Drama",
-    imageURL: "img/inglorious.png"
-  },
-  {
-    title: "Parasite",
-    description:
-      "A poor family, the Kims, con their way into becoming the servants of a rich family, the Parks. But their easy life gets complicated when their deception is threatened with exposure.",
-    genre: "Thriller",
-    director: "Bong Joon Ho",
-    imageURL: "img/parasite.png"
-  }
-];
-
-let Directors = [
-  {
-    name: "Quentin Tarantino",
-    dateofbirth: "March 27, 1963"
-  },
-  {
-    name: "Bong Joon Ho",
-    dateofbirth: "September 14, 1969"
-  },
-  {
-    name: "Valerie Faris",
-    dateofbirth: "October 20, 1958"
-  }
-];
-
-let Genres = [
-  {
-    name: "Comedy-Drama",
-    description:
-      "Comedy-Drama is a genre of dramatic works in which plot elements are a combination of comedy and drama."
-  },
-  {
-    name: "Thriller",
-    description:
-      "A Thriller is a story that is usually a mix of fear and excitement. It has traits from the suspense genre and often from the action, adventure or mystery genres, but the level of terror makes it borderline horror fiction at times as well. It generally has a dark or serious theme, which also makes it similar to drama."
-  },
-  {
-    name: "Drama",
-    description:
-      "Drama is a genre of narrative fiction (or semi-fiction) intended to be more serious than humorous in tone, focusing on in-depth development of realistic characters who must deal with realistic emotional struggles"
-  }
-];
-
-let Users = [
-  {
-    username: "abc123",
-    password: "asdf123",
-    email: "abc@gmail.com",
-    dateofbirth: "March 2, 1990",
-    favorites: {
-      title: "Parasite"
-    }
-  }
-];
+app.use(express.static("public"));
 
 // Gets the list of data about ALL movies
 app.get("/movies", function(req, res) {
-  res.json(Movies);
-  res.send("check out my fav mooooovies!");
+  Movies.find()
+    .then(function(movies) {
+      res.status(201).json(movies);
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
 });
 
 app.get("/documentation", function(req, res) {
   res.sendFile("public/documentation.html", { root: __dirname });
 });
 
-app.get("/movies/:title", (req, res) => {
-  res.json(
-    Movies.find(movies => {
-      return movies.title === req.params.title;
+//get a movie by title
+app.get("/movies/:Title", function(req, res) {
+  Movies.findOne({ Title: req.params.Title })
+    .then(function(movies) {
+      res.json(movies);
     })
+    .catch(function(err) {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
+});
+
+//return genre data by name
+app.get("/movies/genres/:Name", function(req, res) {
+  Movies.findOne({ "Genre.Name": req.params.Name })
+    .then(function(movies) {
+      res.json(movies.Genre);
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
+});
+
+//return data on director by name
+app.get("/movies/directors/:Name", function(req, res) {
+  Movies.findOne({ "Director.Name": req.params.Name })
+    .then(function(movies) {
+      res.json(movies.Director);
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
+});
+
+//Add a user
+// we will expect JSON in this format
+// {
+//   ID: Interger,
+//   Username: String,
+//   Password: String,
+//   Email: String,
+//   Birthday: Date
+// }
+
+app.post("/users", function(req, res) {
+  Users.findOne({ Username: req.body.Username })
+    .then(function(user) {
+      if (user) {
+        return res.status(400).send(req.body.Username + "already exists");
+      } else {
+        Users.create({
+          Username: req.body.Username,
+          Password: req.body.Password,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday
+        })
+          .then(function(user) {
+            res.status(201).json(user);
+          })
+          .catch(function(error) {
+            console.error(error);
+            res.status(500).send("Error: " + error);
+          });
+      }
+    })
+    .catch(function(error) {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
+});
+
+//Update a user's info, by username
+// we'll expect JSON in this format
+// {
+//   Username: String,
+//   (required)
+//   Password: String,
+//   (required)
+//   Email: String,
+//   (required)
+//   Birthday: Date
+// }
+
+app.put("/users/:Username", function(req, res) {
+  Users.findOneAndUpdate(
+    { Username: req.params.Username },
+    {
+      $set: {
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday
+      }
+    },
+    { new: true }, // This line makes sure that the updated document is returned
+    function(err, updatedUser) {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      } else {
+        res.json(updatedUser);
+      }
+    }
   );
 });
 
-app.get("/genre/:name", (req, res) => {
-  res.json(
-    Genres.find(genres => {
-      return genres.name === req.params.name;
-    })
+//Add a movie to a user's list of favorites
+app.post("/users/:Username/:Favorites/:MovieID", function(req, res) {
+  Users.findOneAndUpdate(
+    { Username: req.params.Username },
+    {
+      $push: { Favorites: req.params.MovieID }
+    },
+    { new: true }, // This line makes sure that the updated document is returned
+    function(err, updatedUser) {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      } else {
+        res.json(updatedUser);
+      }
+    }
   );
 });
 
-app.get("/director/:name", (req, res) => {
-  res.json(
-    Directors.find(director => {
-      return director.name === req.params.name;
+// Get all users
+app.get("/users", function(req, res) {
+  Users.find()
+    .then(function(users) {
+      res.status(201).json(users);
     })
+    .catch(function(err) {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
+});
+
+// Get a user by username
+app.get("/users/:Username", function(req, res) {
+  Users.findOne({ Username: req.params.Username })
+    .then(function(user) {
+      res.json(user);
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
+});
+
+//delete favorite movie from user list by username
+
+// app.delete("/users/:username/favorites/:title", (req, res) => {
+//   res.send("Favorite movie successfully deleted");
+// });
+app.delete("/users/:Username/:Favorites/:MovieID", function(req, res) {
+  Users.findOneAndUpdate(
+    { Username: req.params.Username },
+    {
+      $pull: { Favorites: req.params.MovieID }
+    },
+    { new: true }, // This line makes sure that the updated document is returned
+    function(err, updatedUser) {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      } else {
+        res.json(updatedUser);
+      }
+    }
   );
 });
 
-app.post("/users", (req, res) => {
-  let newUser = req.body;
-
-  if (!newUser.username) {
-    const message = "Missing username in request body";
-    res.status(400).send(message);
-  } else {
-    newUser.id = uuid.v4();
-    Users.push(newUser);
-    res.status(201).send(newUser);
-    res.send("User successfully added");
-  }
+//Delete a user by username
+app.delete("/users/:Username", function(req, res) {
+  Users.findOneAndRemove({ Username: req.params.Username })
+    .then(function(user) {
+      if (!user) {
+        res.status(400).send(req.params.Username + " was not found");
+      } else {
+        res.status(200).send(req.params.Username + " was deleted.");
+      }
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
 });
-
-app.put("/users/:username", (req, res) => {
-  res.send("User successfully updated");
-});
-
-app.post("/users/:username/:favorites", (req, res) => {
-  let addFavorite = req.body;
-
-  if (!addFavorite.title) {
-    const message = "Missing movie title in request body";
-    res.status(400).send(message);
-  } else {
-    addFavorite.id = uuid.v4();
-    Users.push(addFavorite);
-    res.status(201).send(addFavorite);
-    res.send("Favorite movie successfully added");
-  }
-});
-
-app.delete("/users/:username/favorites/:title", (req, res) => {
-  res.send("Favorite movie successfully deleted");
-});
-
-app.delete("/users/:username", (req, res) => {
-  res.send("User successfully deleted");
-});
-
-app.use(express.static("public"));
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);
