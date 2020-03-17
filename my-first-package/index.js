@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 var auth = require("./auth")(app);
 app.use(express.static("public"));
 
-var allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
+// var allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
 
 // app.use(
 //   cors({
