@@ -313,9 +313,16 @@ app.use(function(err, req, res, next) {
   res.status(500).send("Something broke!");
 });
 
+mongoose.connect(process.env.CONNECTION_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
 // listen for requests
 var port = process.env.PORT || 3000;
 app.listen(port, "0.0.0.0", function() {
   console.log("Listening on Port ${port}");
 });
 // app.listen(8080, () => console.log("Your app is listening on port 8080."));
+
+// mongoimport --host Cluster0-shard-0/cluster0-shard-00-00-bacig.mongodb.net:27017,cluster0-shard-00-01-bacig.mongodb.net:27017,cluster0-shard-00-02-bacig.mongodb.net:27017 --ssl --username rachel --password jennad --authenticationDatabase admin --db myFlixDB --collection movies --type json --file ./mongoose/movies.json
