@@ -1,5 +1,3 @@
-const cors = require("cors");
-app.use(cors());
 const express = require("express");
 const bodyParser = require("body-parser");
 const uuid = require("uuid");
@@ -11,6 +9,8 @@ const Movies = Models.Movie;
 const Users = Models.User;
 const passport = require("passport");
 require("./passport");
+const cors = require("cors");
+app.use(cors());
 
 app.use(bodyParser.json());
 var auth = require("./auth")(app);
@@ -18,21 +18,21 @@ app.use(express.static("public"));
 
 var allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
 
-app.use(
-  cors({
-    origin: function(origin, callback) {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1) {
-        // If a specific origin isn’t found on the list of allowed origins
-        var message =
-          "The CORS policy for this application doesn’t allow access from origin " +
-          origin;
-        return callback(new Error(message), false);
-      }
-      return callback(null, true);
-    }
-  })
-);
+// app.use(
+//   cors({
+//     origin: function(origin, callback) {
+//       if (!origin) return callback(null, true);
+//       if (allowedOrigins.indexOf(origin) === -1) {
+//         // If a specific origin isn’t found on the list of allowed origins
+//         var message =
+//           "The CORS policy for this application doesn’t allow access from origin " +
+//           origin;
+//         return callback(new Error(message), false);
+//       }
+//       return callback(null, true);
+//     }
+//   })
+// );
 // Gets the list of data about ALL movies
 app.get("/movies", passport.authenticate("jwt", { session: false }), function(
   req,
