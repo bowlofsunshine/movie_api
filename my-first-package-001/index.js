@@ -1,4 +1,5 @@
 const cors = require("cors");
+app.use(cors());
 const express = require("express");
 const bodyParser = require("body-parser");
 const uuid = require("uuid");
@@ -14,7 +15,6 @@ require("./passport");
 app.use(bodyParser.json());
 var auth = require("./auth")(app);
 app.use(express.static("public"));
-app.use(cors());
 
 var allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
 
