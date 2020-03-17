@@ -1,7 +1,10 @@
+const cors = require("cors");
+app.use(cors());
 const express = require("express");
 const bodyParser = require("body-parser");
 const uuid = require("uuid");
 const mongoose = require("mongoose");
+const { check, validationResult } = require("express-validator");
 const app = express();
 const Models = require("./models.js");
 const Movies = Models.Movie;
@@ -13,6 +16,23 @@ app.use(bodyParser.json());
 var auth = require("./auth")(app);
 app.use(express.static("public"));
 
+var allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
+
+app.use(
+  cors({
+    origin: function(origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        //if a specific origin isn't found on the list of allowed origins
+        var message =
+          "The CORS policy for this application doesn't allow access from origin " +
+          origin;
+        return callback(new Error(message), false);
+      }
+      return callback(null, true);
+    }
+  })
+);
 // Gets the list of data about ALL movies
 app.get("/movies", passport.authenticate("jwt", { session: false }), function(
   req,
@@ -94,35 +114,59 @@ app.get(
 //   Birthday: Date
 // }
 
-app.post("/users", passport.authenticate("jwt", { session: false }), function(
-  req,
-  res
-) {
-  Users.findOne({ Username: req.body.Username })
-    .then(function(user) {
-      if (user) {
-        return res.status(400).send(req.body.Username + "already exists");
-      } else {
-        Users.create({
-          Username: req.body.Username,
-          Password: req.body.Password,
-          Email: req.body.Email,
-          Birthday: req.body.Birthday
-        })
-          .then(function(user) {
-            res.status(201).json(user);
+app.post(
+  "/users",
+  //validation logic here for request
+  //you can either use a chain of methods like .not().isEmpty()
+  //which means 'opposite of isEmpty' in plain english 'is not empty'
+  //or user. islength({min: 5}) which means min value of 5 char. are allowed
+  [
+    check("Username", "Username is required").isLength({ min: 5 }),
+    check(
+      "Username",
+      "Username contains non alphanumeric characters - not allowed."
+    ).isAlphanumeric(),
+    check("Password", "Password is required")
+      .not()
+      .isEmpty(),
+    check("Email", "Email does not appear to be valid").isEmail()
+  ],
+  passport.authenticate("jwt", { session: false }),
+  function(req, res) {
+    //check the validation object for errorss
+    var errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    var hashPassword = Users.hashPassword(req.body.Password);
+    //search test to see if user with requested username already exists
+    Users.findOne({ Username: req.body.Username })
+      .then(function(user) {
+        if (user) {
+          //if user is found, send response that it exists already
+          return res.status(400).send(req.body.Username + "already exists");
+        } else {
+          Users.create({
+            Username: req.body.Username,
+            Password: hashPassword,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
           })
-          .catch(function(error) {
-            console.error(error);
-            res.status(500).send("Error: " + error);
-          });
-      }
-    })
-    .catch(function(error) {
-      console.error(error);
-      res.status(500).send("Error: " + error);
-    });
-});
+            .then(function(user) {
+              res.status(201).json(user);
+            })
+            .catch(function(error) {
+              console.error(error);
+              res.status(500).send("Error: " + error);
+            });
+        }
+      })
+      .catch(function(error) {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      });
+  }
+);
 
 //Update a user's info, by username
 // we'll expect JSON in this format
@@ -270,4 +314,7 @@ app.use(function(err, req, res, next) {
 });
 
 // listen for requests
-app.listen(8080, () => console.log("Your app is listening on port 8080."));
+var port = process.env.PORT || 3000;
+app.listen(port, "0.0.0.0", function() {
+  console.log("Listening on Port ${port}");
+});
