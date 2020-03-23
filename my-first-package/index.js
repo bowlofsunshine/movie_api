@@ -183,6 +183,7 @@ app.put(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
   function(req, res) {
+    if() {
     Users.findOneAndUpdate(
       { Username: req.params.Username },
       {
@@ -202,13 +203,15 @@ app.put(
           res.json(updatedUser);
         }
       }
-    );
+    )} else {
+      res.status(200).send("not authorized to upadate" + req.params.Username);
+    };
   }
 );
 
 //Add a movie to a user's list of favorites
 app.post(
-  "/users/:Username/:Favorites/:MovieID",
+  "/users/:Username/favorites/:MovieID",
   passport.authenticate("jwt", { session: false }),
   function(req, res) {
     Users.findOneAndUpdate(
@@ -266,7 +269,7 @@ app.get(
 //   res.send("Favorite movie successfully deleted");
 // });
 app.delete(
-  "/users/:Username/:Favorites/:MovieID",
+  "/users/:Username/favorites/:MovieID",
   passport.authenticate("jwt", { session: false }),
   function(req, res) {
     Users.findOneAndUpdate(
@@ -292,6 +295,7 @@ app.delete(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
   function(req, res) {
+    if (){
     Users.findOneAndRemove({ Username: req.params.Username })
       .then(function(user) {
         if (!user) {
@@ -299,7 +303,9 @@ app.delete(
         } else {
           res.status(200).send(req.params.Username + " was deleted.");
         }
-      })
+      })} else {
+        res.status(200).send("not authorized to delete" + req.params.Username);
+      }
       .catch(function(err) {
         console.error(err);
         res.status(500).send("Error: " + err);
