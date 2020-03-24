@@ -16,6 +16,7 @@ app.use(bodyParser.json());
 var auth = require("./auth")(app);
 app.use(express.static("public"));
 // githubcheck
+// does heroku automatically push this to github?
 // var allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
 
 // app.use(
