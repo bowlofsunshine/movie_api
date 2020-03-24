@@ -17,7 +17,8 @@ export class MainView extends React.Component {
     }
     //ome of the hooks available in react component 
     componentDidMount() {
-        axios.get('<myflixyappy1226.herokuapp.com/movies>')
+        const movieURL = "https://myflixyappy1226.herokuapp.com/movies";
+        axios.get(movieURL)
             .then(response => {
                 //assign the resilt to the state 
                 this.setState({
