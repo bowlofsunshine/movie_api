@@ -183,7 +183,7 @@ app.put(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
   function (req, res) {
-    if () {
+    if (true == true) {
       Users.findOneAndUpdate(
         { Username: req.params.Username },
         {
