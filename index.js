@@ -16,8 +16,6 @@ app.use(bodyParser.json());
 var auth = require("./auth")(app);
 app.use(express.static("public"));
 
-let allowedOrigins = * ;
-
 // Gets the list of data about ALL movies
 app.get("/movies", /*passport.authenticate("jwt", { session: false }),*/ function (
   req,
