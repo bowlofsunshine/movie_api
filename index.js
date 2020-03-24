@@ -35,7 +35,7 @@ app.use(express.static("public"));
 //   })
 // );
 // Gets the list of data about ALL movies
-app.get("/movies", passport.authenticate("jwt", { session: false }), function (
+app.get("/movies", /*passport.authenticate("jwt", { session: false }),*/ function (
   req,
   res
 ) {
@@ -184,7 +184,7 @@ app.put(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
   function (req, res) {
-    if (true == true) {
+    if (user) {
       Users.findOneAndUpdate(
         { Username: req.params.Username },
         {
@@ -297,7 +297,7 @@ app.delete(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
   function (req, res) {
-    if () {
+    if (user) {
       Users.findOneAndRemove({ Username: req.params.Username })
         .then(function (user) {
           if (!user) {
