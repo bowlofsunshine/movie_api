@@ -8,8 +8,9 @@ npm-debug.log
 .DS_Store
 .cache
 client/.DS_Store
+client/.cache
 
 # Docker
 Dockerfile
 docker-compose.yml
-.DS_Store
+./client/.cache
