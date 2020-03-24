@@ -37,29 +37,6 @@ export class MainView extends React.Component {
 
     //this overrides the rendure() method of the superclass, no need to call super() though, as it does nothing by default 
     render() {
-        return (
-            <div className="main-view"></div>
-        );
-    }
-}
-
-
-export class MainView extends React.Component {
-    //ome of the hooks available in react component 
-    componentDidMount() {
-        axios.get('<myflixyappy1226.herokuapp.com/movies>')
-            .then(response => {
-                //assign the resilt to the state 
-                this.setState({
-                    movies: response.data
-                });
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-
-    render() {
         //if the state isnt initialized this will throw on runtime before the data is initally loaded 
         const { movies, selectedMovie } = this.state;
 
@@ -79,3 +56,6 @@ export class MainView extends React.Component {
         );
     }
 }
+
+
+
