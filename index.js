@@ -15,7 +15,7 @@ app.use(cors());
 app.use(bodyParser.json());
 var auth = require("./auth")(app);
 app.use(express.static("public"));
-
+// githubcheck
 // var allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
 
 // app.use(
