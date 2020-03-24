@@ -306,13 +306,13 @@ app.delete(
             res.status(200).send(req.params.Username + " was deleted.");
           }
         })
+        .catch(function (err) {
+          console.error(err);
+          res.status(500).send("Error: " + err);
+        });
     } else {
       res.status(200).send("not authorized to delete" + req.params.Username);
     }
-      .catch (function(err) {
-      console.error(err);
-      res.status(500).send("Error: " + err);
-    });
   }
 );
 
