@@ -1,9 +1,16 @@
 import React from 'react';
 import axios from 'axios';
 
+import PropTypes from 'prop-types';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 import { LoginView } from '../login-view/login-view';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
+
+import "./main-view.scss"
 
 export class MainView extends React.Component {
     constructor() {
@@ -53,15 +60,20 @@ export class MainView extends React.Component {
         if (!movies) return <div className="main-view" />;
 
         return (
-            <div className="main-view">
-                {selectedMovie
-                    ? <MovieView movie={selectedMovie} />
-                    : movies.map(movie => (
-                        <MovieCard key={movie._id} movie={movie} onClick={movie => this.onMovieClick(movie)} />
-                    ))
-                }
-
-            </div>
+            <Container>
+                <div className="main-view">
+                    <Row>
+                        <Col sm>
+                            {selectedMovie
+                                ? <MovieView movie={selectedMovie} />
+                                : movies.map(movie => (
+                                    <MovieCard key={movie._id} movie={movie} onClick={movie => this.onMovieClick(movie)} />
+                                ))
+                            }
+                        </Col>
+                    </Row>
+                </div>
+            </Container>
         );
     }
 }

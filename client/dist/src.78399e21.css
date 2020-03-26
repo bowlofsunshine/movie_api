@@ -1,6 +1,9 @@
 img {
   width: 200px;
 }
+.card {
+  display: inline-flex;
+}
 .my-flix {
   color: steelblue;
 }
