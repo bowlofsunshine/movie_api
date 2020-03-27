@@ -9,19 +9,21 @@ import Col from 'react-bootstrap/Col';
 import { LoginView } from '../login-view/login-view';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
+import { RegistrationView } from '../registration-view/registration-view';
 
 import "./main-view.scss"
 
 export class MainView extends React.Component {
-    constructor() {
+    constructor(props) {
         // call the superclass constructor so react can initialize it 
-        super();
+        super(props);
 
         //initialize the state to an empty object so we can destructure it later
         this.state = {
             movies: null,
             selectedMovie: null,
-            user: null
+            user: null,
+            register: false
         };
     }
     //ome of the hooks available in react component 
@@ -51,29 +53,52 @@ export class MainView extends React.Component {
         });
     }
 
+    onSignedIn(user) {
+        this.setState({
+            user: user,
+            register: false
+        });
+    }
+    register() {
+        this.setState({
+            register: true
+        });
+    }
+    alreadyMember() {
+        this.setState({
+            register: false
+        })
+    }
+    onButtonClick() {
+        this.setState({
+            selectedMovie: null
+        });
+    }
+
     //this overrides the rendure() method of the superclass, no need to call super() though, as it does nothing by default 
     render() {
         //if the state isnt initialized this will throw on runtime before the data is initally loaded 
-        const { movies, selectedMovie, user } = this.state;
-        if (!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)} />;
+        const { movies, selectedMovie, user, register } = this.state;
+        if (!user && register === false) return <LoginView onClick={() => this.register()} onLoggedIn={user => this.onLoggedIn(user)} />;
         //before the movie have been loaded 
+        if (register) return <RegistrationView onClick={() => this.alreadyMember()} onSignedIn={user => this.onSignedIn(user)} />
         if (!movies) return <div className="main-view" />;
 
         return (
-            <Container>
-                <div className="main-view">
+            <div className="main-view">
+                <Container>
                     <Row>
                         <Col sm>
                             {selectedMovie
-                                ? <MovieView movie={selectedMovie} />
+                                ? <MovieView movie={selectedMovie} onClick={() => this.onButtonClick()} />
                                 : movies.map(movie => (
                                     <MovieCard key={movie._id} movie={movie} onClick={movie => this.onMovieClick(movie)} />
                                 ))
                             }
                         </Col>
                     </Row>
-                </div>
-            </Container>
+                </Container>
+            </div>
         );
     }
 }
