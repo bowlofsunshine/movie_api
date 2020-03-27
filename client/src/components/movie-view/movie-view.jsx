@@ -3,6 +3,8 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { MainView } from '../main-view/main-view';
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
+import { withRouter } from "react-router-dom";
 
 import "./movie-view.scss"
 
@@ -10,11 +12,10 @@ export class MovieView extends React.Component {
 
     constructor() {
         super();
-        this.state = {};
     }
 
     render() {
-        const { movie } = this.props;
+        const { movie, onClick } = this.props;
 
         if (!movie) return null;
 
@@ -39,7 +40,7 @@ export class MovieView extends React.Component {
                     <span className="label">Director: </span>
                     <span className="value">{movie.Director.Name}</span>
                 </div>
-                <Button variant="primary" onClick={() => onClick(movie)}>Back</Button>
+                <Button href="/">Go Back</Button>
 
 
             </div>
