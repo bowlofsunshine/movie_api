@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import { Link } from "react-router-dom";
 import './login-view.scss';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 export function LoginView(props) {
     const [username, setUsername] = useState('');
@@ -17,23 +20,32 @@ export function LoginView(props) {
     };
 
     return (
-        <Form style={{ width: '16rem' }}>
-            <Form.Group controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" value={username} onChange={e => setUsername(e.target.value)} />
-            </Form.Group>
+        <Container>
+            <Row>
+                <Col>
+                    <Form style={{ width: '16rem' }}>
+                        <Form.Group controlId="formBasicEmail">
+                            <Form.Label>Email address</Form.Label>
+                            <Form.Control type="email" placeholder="Enter email" value={username} onChange={e => setUsername(e.target.value)} />
+                        </Form.Group>
 
-            <Form.Group controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
-            </Form.Group>
-            <Button id='loginButton' onClick={handleSubmit}>
-                Log in
+                        <Form.Group controlId="formBasicPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Button id='loginButton' onClick={handleSubmit}>
+                                Log in
         </Button>
-            <Form.Group controlId='newUser'>
-                <Button id="registerButton" onClick={() => props.onClick()}>Register</Button>
-            </Form.Group>
-        </Form>
+                        </Form.Group>
+                        <Form.Group controlId='newUser'>
+                            <Button id="registerButton" onClick={() => props.onClick()}>Register</Button>
+                        </Form.Group>
+
+                    </Form>
+                </Col>
+            </Row>
+        </Container>
     );
 }
 

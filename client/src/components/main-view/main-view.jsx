@@ -52,13 +52,6 @@ export class MainView extends React.Component {
             user
         });
     }
-
-    onSignedIn(user) {
-        this.setState({
-            user: user,
-            register: false
-        });
-    }
     register() {
         this.setState({
             register: true
