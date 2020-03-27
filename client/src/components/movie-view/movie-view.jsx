@@ -47,15 +47,6 @@ export class MovieView extends React.Component {
     }
 }
 
-<Card border="danger" style={{ width: '16rem' }}>
-    <Card.Img variant="top" src={movie.ImagePath} />
-    <Card.Body>
-        <Card.Title>{movie.Title}</Card.Title>
-        <Card.Text>{movie.Description}</Card.Text>
-        <Button variant="primary" onClick={() => onClick(movie)}>Open</Button>
-    </Card.Body>
-</Card>
-
 {/* <Card style={{ width: '18rem' }}>
   <Card.Body>
     <Card.Title>Card Title</Card.Title>

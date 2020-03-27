@@ -36050,32 +36050,6 @@ var MovieView = /*#__PURE__*/function (_React$Component) {
 }(_react.default.Component);
 
 exports.MovieView = MovieView;
-
-_react.default.createElement(_Card.default, {
-  border: "danger",
-  style: {
-    width: '16rem'
-  }
-}, _react.default.createElement(_Card.default.Img, {
-  variant: "top",
-  src: movie.ImagePath
-}), _react.default.createElement(_Card.default.Body, null, _react.default.createElement(_Card.default.Title, null, movie.Title), _react.default.createElement(_Card.default.Text, null, movie.Description), _react.default.createElement(_Button.default, {
-  variant: "primary",
-  onClick: function (_onClick2) {
-    function onClick() {
-      return _onClick2.apply(this, arguments);
-    }
-
-    onClick.toString = function () {
-      return _onClick2.toString();
-    };
-
-    return onClick;
-  }(function () {
-    return onClick(movie);
-  })
-}, "Open")));
-
 {
   /* <Card style={{ width: '18rem' }}>
    <Card.Body>
@@ -36335,7 +36309,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50285" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55238" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
