@@ -7,6 +7,7 @@ import './login-view.scss';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import axios from 'axios';
 
 export function LoginView(props) {
     const [username, setUsername] = useState('');
@@ -16,7 +17,17 @@ export function LoginView(props) {
         e.preventDefault();
         console.log(username, password);
         //send a request to the server for authenitcation then call props.onLoggedIn(username)
-        props.onLoggedIn(username);
+        // props.onLoggedIn(username);
+        axios.post('https://myflixyappy1226.herokuapp.com/login', {
+            Username: username,
+            Password: password
+        }).then(response => {
+            const data = response.data;
+            props.onLoggedIn(data);
+        })
+            .catch(e => {
+                console.log('user does not exist')
+            });
     };
 
     return (
@@ -25,8 +36,8 @@ export function LoginView(props) {
                 <Col>
                     <Form style={{ width: '16rem' }}>
                         <Form.Group controlId="formBasicEmail">
-                            <Form.Label>Email address</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" value={username} onChange={e => setUsername(e.target.value)} />
+                            <Form.Label>Username:</Form.Label>
+                            <Form.Control type="text" placeholder="Enter username" value={username} onChange={e => setUsername(e.target.value)} />
                         </Form.Group>
 
                         <Form.Group controlId="formBasicPassword">
@@ -34,9 +45,9 @@ export function LoginView(props) {
                             <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
                         </Form.Group>
                         <Form.Group>
-                            <Button id='loginButton' onClick={handleSubmit}>
+                            <Button variant="primary" type="submit" id='loginButton' onClick={handleSubmit}>
                                 Log in
-        </Button>
+                             </Button>
                         </Form.Group>
                         <Form.Group controlId='newUser'>
                             <Button id="registerButton" onClick={() => props.onClick()}>Register</Button>

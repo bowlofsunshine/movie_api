@@ -17,7 +17,7 @@ var auth = require("./auth")(app);
 app.use(express.static("public"));
 
 // Gets the list of data about ALL movies
-app.get("/movies", /*passport.authenticate("jwt", { session: false }),*/ function (
+app.get("/movies", passport.authenticate("jwt", { session: false }), function (
   req,
   res
 ) {

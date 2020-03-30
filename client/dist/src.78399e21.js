@@ -35611,6 +35611,8 @@ var _Row = _interopRequireDefault(require("react-bootstrap/Row"));
 
 var _Col = _interopRequireDefault(require("react-bootstrap/Col"));
 
+var _axios = _interopRequireDefault(require("axios"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -35643,8 +35645,17 @@ function LoginView(props) {
   var handleSubmit = function handleSubmit(e) {
     e.preventDefault();
     console.log(username, password); //send a request to the server for authenitcation then call props.onLoggedIn(username)
+    // props.onLoggedIn(username);
 
-    props.onLoggedIn(username);
+    _axios.default.post('https://myflixyappy1226.herokuapp.com/login', {
+      Username: username,
+      Password: password
+    }).then(function (response) {
+      var data = response.data;
+      props.onLoggedIn(data);
+    }).catch(function (e) {
+      console.log('user does not exist');
+    });
   };
 
   return _react.default.createElement(_Container.default, null, _react.default.createElement(_Row.default, null, _react.default.createElement(_Col.default, null, _react.default.createElement(_Form.default, {
@@ -35653,9 +35664,9 @@ function LoginView(props) {
     }
   }, _react.default.createElement(_Form.default.Group, {
     controlId: "formBasicEmail"
-  }, _react.default.createElement(_Form.default.Label, null, "Email address"), _react.default.createElement(_Form.default.Control, {
-    type: "email",
-    placeholder: "Enter email",
+  }, _react.default.createElement(_Form.default.Label, null, "Username:"), _react.default.createElement(_Form.default.Control, {
+    type: "text",
+    placeholder: "Enter username",
     value: username,
     onChange: function onChange(e) {
       return setUsername(e.target.value);
@@ -35670,6 +35681,8 @@ function LoginView(props) {
       return setPassword(e.target.value);
     }
   })), _react.default.createElement(_Form.default.Group, null, _react.default.createElement(_Button.default, {
+    variant: "primary",
+    type: "submit",
     id: "loginButton",
     onClick: handleSubmit
   }, "Log in")), _react.default.createElement(_Form.default.Group, {
@@ -35686,7 +35699,7 @@ LoginView.propTypes = {
   onLoggedIn: _propTypes.default.func.isRequired,
   onClick: _propTypes.default.func.isRequired
 };
-},{"react":"../node_modules/react/index.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./login-view.scss":"components/login-view/login-view.scss","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Row":"../node_modules/react-bootstrap/esm/Row.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js"}],"../node_modules/react-bootstrap/esm/divWithClassName.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./login-view.scss":"components/login-view/login-view.scss","react-bootstrap/Container":"../node_modules/react-bootstrap/esm/Container.js","react-bootstrap/Row":"../node_modules/react-bootstrap/esm/Row.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","axios":"../node_modules/axios/index.js"}],"../node_modules/react-bootstrap/esm/divWithClassName.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36333,13 +36346,22 @@ var MainView = /*#__PURE__*/function (_React$Component) {
       this.setState({
         selectedMovie: movie
       });
-    }
+    } //The parameter has been renamed from user to authData, as you need to use both the user and the token.
+
   }, {
     key: "onLoggedIn",
-    value: function onLoggedIn(user) {
+    value: function onLoggedIn(authData) {
+      //The authData has been logged in the console. We recommend you open the console and check the authData that’s been sent.
+      console.log(authData); //The user’s username (authData.user.Username) has been saved in the user state
+
       this.setState({
-        user: user
-      });
+        user: authData.user.Username
+      }); //The auth information received from the handleSubmit method—the token and the user—has been saved in localStorage. localStorage has a setItem method that accepts two arguments: a key and a value. In this example, the token and username have been saved.
+
+      localStorage.setItem('token', authData.token);
+      localStorage.setItem('user', authData.user.Username); //this.getMovies(authData) is called and will get the movies from your API once the user is logged in. Note the use of the this keyword, which is a special keyword in JavaScript. this refers to the object itself, in this case, the MainView class.
+
+      this.getMovies(authData.token);
     }
   }, {
     key: "register",
@@ -36361,12 +36383,31 @@ var MainView = /*#__PURE__*/function (_React$Component) {
       this.setState({
         selectedMovie: null
       });
+    }
+  }, {
+    key: "getMovies",
+    value: function getMovies(token) {
+      var _this3 = this;
+
+      _axios.default.get('myflixyappy1226.herokuapp.com/movies', {
+        //By passing bearer authorization in the header of your HTTP requests, you can make authenticated requests to your API.
+        headers: {
+          Authorization: 'Bearer ${token}'
+        }
+      }).then(function (response) {
+        //assign the result to the state
+        _this3.setState({
+          movies: response.data
+        });
+      }).catch(function (error) {
+        console.log(error);
+      });
     } //this overrides the rendure() method of the superclass, no need to call super() though, as it does nothing by default 
 
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
       //if the state isnt initialized this will throw on runtime before the data is initally loaded 
       var _this$state = this.state,
@@ -36376,19 +36417,19 @@ var MainView = /*#__PURE__*/function (_React$Component) {
           register = _this$state.register;
       if (!user && register === false) return _react.default.createElement(_loginView.LoginView, {
         onClick: function onClick() {
-          return _this3.register();
+          return _this4.register();
         },
         onLoggedIn: function onLoggedIn(user) {
-          return _this3.onLoggedIn(user);
+          return _this4.onLoggedIn(user);
         }
       }); //before the movie have been loaded 
 
       if (register) return _react.default.createElement(_registrationView.RegistrationView, {
         onClick: function onClick() {
-          return _this3.alreadyMember();
+          return _this4.alreadyMember();
         },
         onSignedIn: function onSignedIn(user) {
-          return _this3.onSignedIn(user);
+          return _this4.onSignedIn(user);
         }
       });
       if (!movies) return _react.default.createElement("div", {
@@ -36401,14 +36442,14 @@ var MainView = /*#__PURE__*/function (_React$Component) {
       }, selectedMovie ? _react.default.createElement(_movieView.MovieView, {
         movie: selectedMovie,
         onClick: function onClick() {
-          return _this3.onButtonClick();
+          return _this4.onButtonClick();
         }
       }) : movies.map(function (movie) {
         return _react.default.createElement(_movieCard.MovieCard, {
           key: movie._id,
           movie: movie,
           onClick: function onClick(movie) {
-            return _this3.onMovieClick(movie);
+            return _this4.onMovieClick(movie);
           }
         });
       })))));
@@ -36513,7 +36554,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56179" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62002" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

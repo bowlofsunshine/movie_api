@@ -46,11 +46,19 @@ export class MainView extends React.Component {
             selectedMovie: movie
         });
     }
-
-    onLoggedIn(user) {
+    //The parameter has been renamed from user to authData, as you need to use both the user and the token.
+    onLoggedIn(authData) {
+        //The authData has been logged in the console. We recommend you open the console and check the authData that’s been sent.
+        console.log(authData);
+        //The user’s username (authData.user.Username) has been saved in the user state
         this.setState({
-            user
+            user: authData.user.Username
         });
+        //The auth information received from the handleSubmit method—the token and the user—has been saved in localStorage. localStorage has a setItem method that accepts two arguments: a key and a value. In this example, the token and username have been saved.
+        localStorage.setItem('token', authData.token);
+        localStorage.setItem('user', authData.user.Username);
+        //this.getMovies(authData) is called and will get the movies from your API once the user is logged in. Note the use of the this keyword, which is a special keyword in JavaScript. this refers to the object itself, in this case, the MainView class.
+        this.getMovies(authData.token);
     }
     register() {
         this.setState({
@@ -66,6 +74,22 @@ export class MainView extends React.Component {
         this.setState({
             selectedMovie: null
         });
+    }
+
+    getMovies(token) {
+        axios.get('myflixyappy1226.herokuapp.com/movies', {
+            //By passing bearer authorization in the header of your HTTP requests, you can make authenticated requests to your API.
+            headers: { Authorization: 'Bearer ${token}' }
+        })
+            .then(response => {
+                //assign the result to the state
+                this.setState({
+                    movies: response.data
+                });
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     //this overrides the rendure() method of the superclass, no need to call super() though, as it does nothing by default 
