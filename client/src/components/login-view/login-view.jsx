@@ -50,7 +50,7 @@ export function LoginView(props) {
                              </Button>
                         </Form.Group>
                         <Form.Group controlId='newUser'>
-                            <Button id="registerButton" onClick={() => props.onClick()}>Register</Button>
+                            <Link to={'/register'}><Button id="registerButton" variant='danger'>Register</Button></Link>
                         </Form.Group>
 
                     </Form>
@@ -60,7 +60,7 @@ export function LoginView(props) {
     );
 }
 
-LoginView.propTypes = {
-    onLoggedIn: PropTypes.func.isRequired,
-    onClick: PropTypes.func.isRequired
-};
+// LoginView.propTypes = {
+//     onLoggedIn: PropTypes.func.isRequired,
+//     onClick: PropTypes.func.isRequired
+// };

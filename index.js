@@ -166,30 +166,30 @@ app.put(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
   function (req, res) {
-    if (user) {
-      Users.findOneAndUpdate(
-        { Username: req.params.Username },
-        {
-          $set: {
-            Username: req.body.Username,
-            Password: req.body.Password,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
-          }
-        },
-        { new: true }, // This line makes sure that the updated document is returned
-        function (err, updatedUser) {
-          if (err) {
-            console.error(err);
-            res.status(500).send("Error: " + err);
-          } else {
-            res.json(updatedUser);
-          }
+    // if (user) {
+    Users.findOneAndUpdate(
+      { Username: req.params.Username },
+      {
+        $set: {
+          Username: req.body.Username,
+          Password: req.body.Password,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday
         }
-      )
-    } else {
-      res.status(200).send("not authorized to upadate" + req.params.Username);
-    };
+      },
+      { new: true }, // This line makes sure that the updated document is returned
+      function (err, updatedUser) {
+        if (err) {
+          console.error(err);
+          res.status(500).send("Error: " + err);
+        } else {
+          res.json(updatedUser);
+        }
+      }
+    )
+    // } else {
+    //   res.status(200).send("not authorized to upadate" + req.params.Username);
+    // };
   }
 );
 
@@ -279,22 +279,22 @@ app.delete(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
   function (req, res) {
-    if (user) {
-      Users.findOneAndRemove({ Username: req.params.Username })
-        .then(function (user) {
-          if (!user) {
-            res.status(400).send(req.params.Username + " was not found");
-          } else {
-            res.status(200).send(req.params.Username + " was deleted.");
-          }
-        })
-        .catch(function (err) {
-          console.error(err);
-          res.status(500).send("Error: " + err);
-        });
-    } else {
-      res.status(200).send("not authorized to delete" + req.params.Username);
-    }
+    // if (user) {
+    Users.findOneAndRemove({ Username: req.params.Username })
+      .then(function (user) {
+        if (!user) {
+          res.status(400).send(req.params.Username + " was not found");
+        } else {
+          res.status(200).send(req.params.Username + " was deleted.");
+        }
+      })
+      .catch(function (err) {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      });
+    // } else {
+    //   res.status(200).send("not authorized to delete" + req.params.Username);
+    // }
   }
 );
 

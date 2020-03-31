@@ -3,7 +3,6 @@ import axios from 'axios'
 import Form from 'react-bootstrap/Form';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
-import { Link } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -17,13 +16,30 @@ export function RegistrationView(props) {
     const [email, setEmail] = useState('');
     const [birthday, setBirthday] = useState('');
 
-
-    const handleSubmit = (e) => {
+    const handleRegister = (e) => {
         e.preventDefault();
-        console.log(username, password, name, email, birthday);
-        //send a request to the server for authenitcation then call props.onLoggedIn(username)
-        props.onLoggedIn(username);
+        axios.post('https://myflixyappy1226.herokuapp.com/users', {
+            Username: username,
+            Password: password,
+            Email: email,
+            Birthday: birthday
+        }).then(response => {
+            const data = response.data;
+            console.log(data);
+            window.open('/', '_self');
+            //// the second argument '_self' is necessary so that the page will open in the current tab
+        })
+            .catch(e => {
+                console.log('error registering user')
+            });
     };
+
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     console.log(username, password, name, email, birthday);
+    //     //send a request to the server for authenitcation then call props.onLoggedIn(username)
+    //     props.onLoggedIn(username);
+    // };
 
     return (
         <Container>
@@ -48,10 +64,10 @@ export function RegistrationView(props) {
                         </Form.Group>
                         <Form.Group controlId="formBasicBirthday">
                             <Form.Label>Birthday</Form.Label>
-                            <Form.Control type="birthday" placeholder="Enter birthday(12/12/1995)" value={birthday} onChange={e => setBirthday(e.target.value)} />
+                            <Form.Control type="birthday" placeholder="Enter birthday(26/12/1995)" value={birthday} onChange={e => setBirthday(e.target.value)} />
                         </Form.Group>
                         <Form.Group controlId='newUser'>
-                            <Button id="registerButton" onClick={() => props.onClick()}>Register</Button>
+                            <Button id="registerButton" variant="danger" type="submit" onClick={handleRegister}>Register</Button>
                         </Form.Group>
                     </Form>
                 </Col>
@@ -60,7 +76,7 @@ export function RegistrationView(props) {
     );
 }
 
-RegistrationView.propTypes = {
-    onSignedIn: PropTypes.func.isRequired,
-    onClick: PropTypes.func.isRequired
-};
+// RegistrationView.propTypes = {
+//     onSignedIn: PropTypes.func,
+//     onClick: PropTypes.func
+// };

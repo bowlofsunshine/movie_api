@@ -5,6 +5,7 @@ import { MainView } from '../main-view/main-view';
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { withRouter } from "react-router-dom";
+import ListGroup from 'react-bootstrap/ListGroup'
 
 import "./movie-view.scss"
 
@@ -16,29 +17,68 @@ export class MovieView extends React.Component {
     }
 
     render() {
-        const { movie, onClick } = this.props;
+        const { movie } = this.props;
 
         if (!movie) return null;
 
         return (
-            <div>
+            <div className="movie-view">
 
                 <Card border="danger" style={{ width: '20rem' }}>
+                    <Card.Title className="movie-title">{movie.Title}</Card.Title>
                     <Card.Img variant="top" src={movie.ImagePath} />
                     <Card.Body>
                         <Card.Title >{movie.Title}</Card.Title>
                         <Card.Text >Description: {movie.Description}</Card.Text>
-                        <Card.Text >Genre: {movie.Genre.Name}</Card.Text>
-                        <Card.Text >Director: {movie.Director.Name}</Card.Text>
-                        <Button variant="primary" onClick={() => onClick()}>
-                            Go back
-                       </Button>
+                        <ListGroup >
+
+                            <Link to={`/genres/${movie.Genre.Name}`}>
+                                <ListGroup.Item>Genre: {movie.Genre.Name}</ListGroup.Item>
+                            </Link>
+                            <Link to={`/directors/${movie.Director.Name}`}>
+                                <ListGroup.Item>Director: {movie.Director.Name}</ListGroup.Item>
+                            </Link>
+                        </ListGroup>
+                        <Link to={`/`}>
+                            <Button className="button-back" variant="danger">Back to movies</Button>
+                        </Link>
                     </Card.Body>
                 </Card>
             </div>
         );
     }
 }
+
+// MovieView.propTypes = {
+//     movie: PropTypes.shape({
+//         _id: PropTypes.string,
+//         Title: PropTypes.string,
+//         Description: PropTypes.string,
+//         ImagePath: PropTypes.string,
+//         Genre: PropTypes.shape({
+//             Name: PropTypes.string,
+//             Description: PropTypes.string
+
+//         }),
+//         Director: PropTypes.shape({
+//             Name: PropTypes.string
+//         })
+//     }).isRequired
+// };
+
+// MovieView.propTypes = {
+//     movie: PropTypes.shape({
+//         Title: PropTypes.string,
+//         Description: PropTypes.string,
+//         Genre: PropTypes.shape({
+//             Name: PropTypes.string
+//         }),
+//         Director: PropTypes.shape({
+//             Name: PropTypes.string
+//         })
+//     }).isRequired,
+//     onClick: PropTypes.func.isRequired
+// }
 
 {/* <Card border="danger" style={{ width: '16rem' }} className="movie-view container-fluid align-items-center">
     <Card.Img variant="top" className="movie-poster" src={movie.ImagePath} />
