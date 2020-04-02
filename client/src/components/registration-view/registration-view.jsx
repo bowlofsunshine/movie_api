@@ -6,13 +6,13 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { Link } from "react-router-dom";
 import './registration-view.scss';
 
 
 export function RegistrationView(props) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [birthday, setBirthday] = useState('');
 
@@ -30,7 +30,7 @@ export function RegistrationView(props) {
             //// the second argument '_self' is necessary so that the page will open in the current tab
         })
             .catch(e => {
-                console.log('error registering user')
+                console.log('error registering user' + error);
             });
     };
 
@@ -58,16 +58,19 @@ export function RegistrationView(props) {
                             <Form.Label>Email address</Form.Label>
                             <Form.Control type="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />
                         </Form.Group>
-                        <Form.Group controlId="formBasicName">
-                            <Form.Label>Name</Form.Label>
-                            <Form.Control type="name" placeholder="Enter name" value={name} onChange={e => setName(e.target.value)} />
-                        </Form.Group>
                         <Form.Group controlId="formBasicBirthday">
                             <Form.Label>Birthday</Form.Label>
-                            <Form.Control type="birthday" placeholder="Enter birthday(26/12/1995)" value={birthday} onChange={e => setBirthday(e.target.value)} />
+                            <Form.Control type="birthday" placeholder="Enter birthday(12/26/1995)" value={birthday} onChange={e => setBirthday(e.target.value)} />
                         </Form.Group>
                         <Form.Group controlId='newUser'>
                             <Button id="registerButton" variant="danger" type="submit" onClick={handleRegister}>Register</Button>
+                            <Link to={`/`}>
+                                <Button variant="primary" >Login</Button>
+                            </Link>
+                        </Form.Group>
+                        <Form.Group controlId="login">
+
+
                         </Form.Group>
                     </Form>
                 </Col>
@@ -76,7 +79,7 @@ export function RegistrationView(props) {
     );
 }
 
-// RegistrationView.propTypes = {
-//     onSignedIn: PropTypes.func,
-//     onClick: PropTypes.func
-// };
+RegistrationView.propTypes = {
+    onSignedIn: PropTypes.func,
+    onClick: PropTypes.func
+};

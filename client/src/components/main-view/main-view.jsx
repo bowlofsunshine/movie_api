@@ -13,7 +13,10 @@ import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { DirectorView } from '../director-view/director-view';
 import { GenreView } from '../genre-view/genre-view';
+import { ProfileView } from '../profile-view/profile-view';
+import { ProfileUpdate } from '../profile-view/profile-update';
 import { RegistrationView } from '../registration-view/registration-view';
+import { Link } from "react-router-dom";
 
 import "./main-view.scss"
 import Button from 'react-bootstrap/Button';
@@ -26,7 +29,10 @@ export class MainView extends React.Component {
         //initialize the state to an empty object so we can destructure it later
         this.state = {
             movies: [],
-            user: null
+            user: null,
+            email: '',
+            birthday: '',
+            userInfo: {}
         };
     }
     getMovies(token) {
@@ -44,6 +50,20 @@ export class MainView extends React.Component {
                 console.log(error);
             });
     }
+
+    updateUser(data) {
+        this.setState({
+            userInfo: data
+        });
+        localStorage.setItem('user', data.Username);
+    }
+
+    // onMovieClick(movie) {
+    //     window.location.hash = '#' + movie._id;
+    //     this.setState({
+    //         selectedMovieId: movie._id
+    //     });
+    // }
 
     //ome of the hooks available in react component 
     componentDidMount() {
@@ -90,7 +110,7 @@ export class MainView extends React.Component {
     //this overrides the rendure() method of the superclass, no need to call super() though, as it does nothing by default 
     render() {
         //if the state isnt initialized this will throw on runtime before the data is initally loaded 
-        const { movies, user } = this.state;
+        const { user, userInfo, token, movies } = this.state;
 
         //before the movie have been loaded 
         if (!movies) return <div className="main-view" />;
@@ -98,9 +118,15 @@ export class MainView extends React.Component {
         return (
             //tells react-router your routes
             <Router>
+                <Link to={`/users/${user}`}>
+                    <Button className="profile-btn" variant="info">
+                        Profile
+                            </Button>
+                </Link>
+                <Button variant="primary" type="submit" id="logOutButton" onClick={() => this.onLogOut()}>Log out </Button>
                 <Container fluid="true">
                     <div className="main-view">
-                        <Button variant="primary" type="submit" id="logOutButton" onClick={() => this.onLogOut()}>Log out </Button>
+
 
                         <Row>
 
@@ -123,6 +149,8 @@ export class MainView extends React.Component {
                                 return <DirectorView director={movies.find(m => m.Director.Name === match.params.name).Director} />
                                 //The command above will return whichever movie contains the required director's information. It returns an object that has a Director key, so adding .Director in the returned movie object will get the director's information.
                             }} />
+                            <Route path="/users/:Username" render={({ match }) => { return <ProfileView userInfo={userInfo} /> }} />
+                            <Route path="/update/:Username" render={({ match }) => { return <ProfileUpdate userInfo={userInfo} /> }} />
 
 
                         </Row>

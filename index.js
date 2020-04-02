@@ -55,6 +55,24 @@ app.get(
   }
 );
 
+// //get a movie by ID
+// app.get(
+//   "/movies/:MovieID",
+//   passport.authenticate("jwt", { session: false }),
+//   function (req, res) {
+//     Movies.findOne({ MovieID: req.params.MovieID })
+//       .then(function (movies) {
+//         res.json(movies);
+//       })
+//       .catch(function (err) {
+//         console.error(err);
+//         res.status(500).send("Error: " + err);
+//       });
+//   }
+// );
+
+
+
 //return genre data by name
 app.get(
   "/movies/genres/:Name",
@@ -215,9 +233,9 @@ app.post(
     );
   }
 );
-
+//passport.authenticate("jwt", { session: false }),
 // Get all users
-app.get("/users", passport.authenticate("jwt", { session: false }), function (
+app.get("/users", function (
   req,
   res
 ) {
@@ -259,7 +277,7 @@ app.delete(
     Users.findOneAndUpdate(
       { Username: req.params.Username },
       {
-        $pull: { Favorites: req.params.MovieID }
+        $pull: { FavoriteMovies: req.params.MovieID }
       },
       { new: true }, // This line makes sure that the updated document is returned
       function (err, updatedUser) {

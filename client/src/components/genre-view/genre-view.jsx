@@ -3,7 +3,9 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
-import ListGroup from 'react-bootstrap/ListGroup'
+import ListGroup from 'react-bootstrap/ListGroup';
+
+import Navbar from 'react-bootstrap/Navbar';
 
 import "./genre-view.scss";
 
@@ -20,6 +22,12 @@ export class GenreView extends React.Component {
 
         return (
             <div className="genre-view" >
+                <Navbar bg="light" expand="lg">
+                    {/* <Button variant="primary" type="submit" id="logOutButton" onClick={() => this.onLogOut()}>Log out </Button> */}
+                    <Link to={`/`}>
+                        <Button className="button-back" variant="danger">Back to movies</Button>
+                    </Link>
+                </Navbar>
                 <Card>
                     <Card.Body>
                         <Card.Title>
