@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import PropTypes from 'prop-types';
-import { MainView } from '../main-view/main-view';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import { withRouter } from "react-router-dom";
@@ -16,14 +15,14 @@ import ListGroup from 'react-bootstrap/ListGroup';
 
 export class ProfileView extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            // username: null,
-            // password: null,
-            // email: null,
-            // birthday: null,
-            // favoriteMovies: []
+            username: null,
+            password: null,
+            email: null,
+            birthday: null,
+            favoriteMovies: []
         };
     }
 
@@ -32,13 +31,12 @@ export class ProfileView extends React.Component {
         let accessToken = localStorage.getItem('token');
         if (accessToken !== null) {
             this.getUser(accessToken);
-            // this.getMovies(accessToken);
         }
     }
 
     getUser(token) {
         let username = localStorage.getItem('user');
-        axios.get(`https://myflixyappy1226.herokuapp.com/users/${username}`, {
+        axios.get(`https://myflixyappy1226.herokuapp.com/users/${localStorage.getItem('user')}`, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(response => {
@@ -58,22 +56,6 @@ export class ProfileView extends React.Component {
             });
     }
 
-    // getMovies(token) {
-    //     axios.get(`https://myflixyappy1226.herokuapp.com/movies`, {
-    //         //By passing bearer authorization in the header of your HTTP requests, you can make authenticated requests to your API.
-    //         headers: { Authorization: `Bearer ${token}` }
-    //     })
-    //         .then(response => {
-    //             // Assign the result to the state
-    //             this.setState({
-    //                 movies: response.data.Movies
-    //             });
-    //             // console.log(response);
-    //         })
-    //         .catch(function (error) {
-    //             console.log(error);
-    //         });
-    // }
 
     deleteAccount() {
         axios.delete(`https://myflixyappy1226.herokuapp.com/users/${localStorage.getItem('user')}`, {
@@ -94,6 +76,24 @@ export class ProfileView extends React.Component {
             });
     }
 
+    deleteFavoriteMovie(event, favoriteMovie) {
+        event.preventDefault();
+        console.log(favoriteMovie);
+        // send a request to the server for authentication
+        axios.delete(`https://myflixyappy1226.herokuapp.com/users/${localStorage.getItem('user')}/favorites/${favoriteMovie}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        })
+            .then(response => {
+                console.log('removed movie from favorites');
+                location.reload();
+            })
+            .catch(error => {
+                console.log('error removing movie' + error);
+            });
+
+    }
+
+
     updateAccount() {
         axios.put(`https://myflixyappy1226.herokuapp.com/users/${localStorage.getItem('user')}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
@@ -106,15 +106,25 @@ export class ProfileView extends React.Component {
             });
     }
 
+
+
     render() {
-        const { username, email, birthday, favoriteMovies, movies, deleteAccount } = this.state;
+        const { username, email, birthday, favoriteMovies, deleteAccount } = this.state;
 
-        // var favMoviesWithTitles = {}
+        const { movies } = this.props;
 
-        // console.log(favoriteMovies)
+        let sortedMovies = [];
+        let arrayMovies = movies.map(m => {
+            for (let i = 0; i < favoriteMovies.length; i++) {
+                const favMov = favoriteMovies[i];
+                if (m._id === favMov) {
+                    sortedMovies.push(m);
+                }
+            }
+        });
 
         return (
-            <Card className="profile-view" style={{ width: '32rem' }}>
+            <Card className="profile-view ml-2" style={{ width: '32rem' }}>
                 <Card.Body>
                     <Card.Title className="profile-title">{username}'s Profile</Card.Title>
                     <ListGroup className="list-group-flush" variant="flush">
@@ -123,26 +133,27 @@ export class ProfileView extends React.Component {
                         <ListGroup.Item>Email: {email}</ListGroup.Item>
                         <ListGroup.Item>Birthday: {birthday && birthday.slice(0, 10)}</ListGroup.Item>
                         <ListGroup.Item>Favorite Movies:
-                            <div>
-
-                                {/* {favoriteMovies} */}
-                                {/* <Card.Title className="movie-title">{movie.Title}</Card.Title> */}
-
-                                {/* {favoriteMovies.map(movies => {
-                                    console.log(movies)
-                                    // < li key={movies._id} className="movie-item" >
-                                    //     <Link to={`/movies/${movies._id}`}>{movies.Title}</Link>
-                                    // </li>
-
-                                })} */}
-
-                            </div>
+                            
+                                {movies && sortedMovies ? (
+                                    <div>
+                                        {sortedMovies.map(favoriteMovie => (
+                                            <ListGroup.Item key={favoriteMovie._id}>
+                                                <Link to={`/movies/${favoriteMovie._id}`}>
+                                                <Button variant="link">{favoriteMovie.Title}</Button>
+                                                </Link>
+                                                <Button className="remove-button float-right" variant="outline-danger" size="sm" onClick={event => this.deleteFavoriteMovie(event, favoriteMovie._id)}>remove movie </Button>
+                                            </ListGroup.Item>
+                                        ))}
+                                    </div>
+                                    ):("You have no favorite movies")}
+                           
                         </ListGroup.Item>
                         <ListGroup.Item>
-                            <Button className="delete-button" variant="danger" type="submit" onClick={() => this.deleteAccount()}>Delete Account</Button>
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                            <Link to={`/users/${username}`}><Button className="update-button" variant="danger">Update Account</Button></Link>
+                            <Button className="delete-button mr-1" variant="danger" type="submit" onClick={() => this.deleteAccount()}>Delete Account</Button>
+                            <Link to={`/update/${username}`}><Button className="update-button mr-1" variant="primary">Update Account</Button></Link>
+                            <Link to={`/`}>
+                                <Button className="button-back mr-1" variant="danger">Back to movies</Button>
+                            </Link>
                         </ListGroup.Item>
                     </ListGroup>
                 </Card.Body>
@@ -151,59 +162,22 @@ export class ProfileView extends React.Component {
     }
 }
 
-
-
-
-
-
-
-
-  // deleteFavoriteMovie(event, favoriteMovie) {
-    //     console.log(favoriteMovie);
-    //     // send a request to the server for authentication
-    //     axios.delete(`https://myflixyappy1226.herokuapp.com/users/${localStorage.getItem('user')}/favorites/${favoriteMovie}`, {
-    //         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    //     })
-    //         .then(response => {
-    //             console.log('removed movie from favorites');
+    // let sortedMovies = {};
+    //     let arrayMovies = []
+    //     if (movies != null) {
+    //         Object.entries(movies).map(([key, value]) => {
+    //             for (var i = 0; i < favoriteMovies.length; i++) {
+    //                 if (value["_id"] == favoriteMovies[i]) {
+    //                     sortedMovies[favoriteMovies[i]] = { "title": value["Title"] };
+    //                     arrayMovies.push(sortedMovies[value["_id"]]["title"]);
+    //                 }
+    //             }
     //         })
-    //         .catch(error => {
-    //             console.log('error removing movie' + error);
-    //         });
-    // }
+    //         console.log(arrayMovies);
+    //     } else {
+    //         console.log("Undedfined stuff");
+    //     }
 
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     console.log(username, password);
-    //     //send a request to the server for authenitcation then call props.onLoggedIn(username)
-    //     // props.onLoggedIn(username);
-    //     axios.post('https://myflixyappy1226.herokuapp.com/login', {
-    //         Username: username,
-    //         Password: password
-    //     }).then(response => {
-    //         const data = response.data;
-    //         props.onLoggedIn(data);
-    //     })
-    //         .catch(e => {
-    //             console.log('user does not exist')
-    //         });
-    // };
-
-
-    // deleteMovieFromFavs(event, favoriteMovie) {
-    //     event.preventDefault();
-    //     console.log(favoriteMovie);
-    //     axios.delete(`https://myflixyappy1226.herokuapp.com/users/${localStorage.getItem('user')}/favorites/${favoriteMovie}`, {
-    //         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    //     })
-    //         .then(response => {
-    //             this.getUser(localStorage.getItem('token'));
-    //         })
-    //         .catch(event => {
-    //             console.log('Oops... something went wrong...');
-    //         });
-    // }
-
-    // handleChange(event) {
-    //     this.setState({ [event.target.name]: event.target.value })
-    // }
+    // {arrayMovies.map(function (key, value) {
+    //     return <li key={value}>{key}</li>
+    // })}

@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import './registration-view.scss';
 
 
@@ -34,17 +34,11 @@ export function RegistrationView(props) {
             });
     };
 
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     console.log(username, password, name, email, birthday);
-    //     //send a request to the server for authenitcation then call props.onLoggedIn(username)
-    //     props.onLoggedIn(username);
-    // };
-
     return (
         <Container>
             <Row>
                 <Col>
+                    <br></br><br></br>
                     <Form className='registrationForm' style={{ width: '16rem' }}>
                         <Form.Group controlId="formBasicUsername">
                             <Form.Label>Username</Form.Label>
@@ -62,15 +56,9 @@ export function RegistrationView(props) {
                             <Form.Label>Birthday</Form.Label>
                             <Form.Control type="birthday" placeholder="Enter birthday(12/26/1995)" value={birthday} onChange={e => setBirthday(e.target.value)} />
                         </Form.Group>
-                        <Form.Group controlId='newUser'>
-                            <Button id="registerButton" variant="danger" type="submit" onClick={handleRegister}>Register</Button>
-                            <Link to={`/`}>
-                                <Button variant="primary" >Login</Button>
-                            </Link>
-                        </Form.Group>
-                        <Form.Group controlId="login">
-
-
+                        <Form.Group>
+                            <Button className="register-button mr-2" id="registerButton" variant="danger" type="submit" onClick={handleRegister}>Register</Button>
+                            <Link to={'/'}><Button className="login-button mr-2" id="loginButton =" variant="primary">Login</Button></Link>
                         </Form.Group>
                     </Form>
                 </Col>
@@ -78,8 +66,3 @@ export function RegistrationView(props) {
         </Container>
     );
 }
-
-RegistrationView.propTypes = {
-    onSignedIn: PropTypes.func,
-    onClick: PropTypes.func
-};

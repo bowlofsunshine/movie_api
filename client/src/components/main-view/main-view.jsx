@@ -9,6 +9,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import { LoginView } from '../login-view/login-view';
+
+import { connect } from "react-redux";
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { DirectorView } from '../director-view/director-view';
@@ -119,13 +121,14 @@ export class MainView extends React.Component {
             //tells react-router your routes
             <Router>
                 <Link to={`/users/${user}`}>
-                    <Button className="profile-btn" variant="info">
+                    <Button className="profile-button ml-2 mr-2" variant="primary">
                         Profile
                             </Button>
                 </Link>
-                <Button variant="primary" type="submit" id="logOutButton" onClick={() => this.onLogOut()}>Log out </Button>
-                <Container fluid="true">
-                    <div className="main-view">
+                <Button className="logout-buttin mr-2" variant="primary" type="submit" id="logOutButton" onClick={() => this.onLogOut()}>Log out </Button>
+                <div className="main-view">
+                    <Container fluid className="main-view">
+
 
 
                         <Row>
@@ -149,50 +152,17 @@ export class MainView extends React.Component {
                                 return <DirectorView director={movies.find(m => m.Director.Name === match.params.name).Director} />
                                 //The command above will return whichever movie contains the required director's information. It returns an object that has a Director key, so adding .Director in the returned movie object will get the director's information.
                             }} />
-                            <Route path="/users/:Username" render={({ match }) => { return <ProfileView userInfo={userInfo} /> }} />
-                            <Route path="/update/:Username" render={({ match }) => { return <ProfileUpdate userInfo={userInfo} /> }} />
+                            <Route path="/users/:Username" render={({ match }) => { return <ProfileView userInfo={userInfo} movies={movies} /> }} />
+
+                            <Route path="/update/:Username" render={({ match }) => { return <ProfileUpdate user={user} userInfo={userInfo} /> }} />
 
 
                         </Row>
 
-                    </div>
-                </Container>
-            </Router>
+
+                    </Container>
+                </div>
+            </Router >
         );
     }
 }
-
-
-
-// {selectedMovie
-
-//     ? <MovieView movie={selectedMovie} onClick={() => this.onButtonClick()} />
-
-//     : movies.map(movie => (
-
-//         <MovieCard key={movie._id} movie={movie} onClick={movie => this.onMovieClick(movie)} />
-//     ))
-// }
-
-// register() {
-//     this.setState({
-//         register: true
-//     });
-// }
-// alreadyMember() {
-//     this.setState({
-//         register: false
-//     })
-// }
-
-// onMovieClick(movie) {
-//     this.setState({
-//         selectedMovie: movie
-//     });
-// }
-
-// onButtonClick() {
-//     this.setState({
-//         selectedMovie: null
-//     });
-// }

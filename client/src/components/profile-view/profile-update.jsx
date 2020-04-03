@@ -9,14 +9,16 @@ import Col from 'react-bootstrap/Col';
 import { Link } from "react-router-dom";
 
 export function ProfileUpdate(props) {
+
     const [username, updateUsername] = useState('');
     const [password, updatePassword] = useState('');
     const [email, updateEmail] = useState('');
     const [birthday, updateBirthday] = useState('');
 
+
     const handleUpdate = (e) => {
         e.preventDefault();
-        axios.put(`https://myflixyappy1226.herokuapp.com/users/${username}`, {
+        axios.put(`https://myflixyappy1226.herokuapp.com/users/${localStorage.getItem('user')}`, {
             Username: username,
             Password: password,
             Email: email,
@@ -25,12 +27,13 @@ export function ProfileUpdate(props) {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         }).then(response => {
             const data = response.data;
+            localStorage.setItem("user", username);
             console.log(data);
             window.open('/', '_self');
             //// the second argument '_self' is necessary so that the page will open in the current tab
         })
             .catch(e => {
-                console.log('error updating user' + error);
+                console.log('error updating user' + e);
             });
     };
 
@@ -38,25 +41,25 @@ export function ProfileUpdate(props) {
         <Container>
             <Row>
                 <Col>
-                    <Form className='registrationForm' style={{ width: '16rem' }}>
-                        <Form.Group controlId="formBasicUsername">
+                    <Form className='updateForm' style={{ width: '16rem' }}>
+                        <Form.Group controlId="formUsername">
                             <Form.Label>Username</Form.Label>
-                            <Form.Control type="username" placeholder="choose username" value={username} onChange={e => updateUsername(e.target.value)} />
+                            <Form.Control required type="text" placeholder="desired username" onChange={e => updateUsername(e.target.value)} />
                         </Form.Group>
-                        <Form.Group controlId="formBasicPassword">
+                        <Form.Group controlId="formPassword">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" value={password} onChange={e => updatePassword(e.target.value)} />
+                            <Form.Control required type="password" placeholder="desired password" onChange={e => updatePassword(e.target.value)} />
                         </Form.Group>
-                        <Form.Group controlId="formBasicEmail">
+                        <Form.Group controlId="formEmail">
                             <Form.Label>Email address</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" value={email} onChange={e => updateEmail(e.target.value)} />
+                            <Form.Control required type="text" placeholder="desired email" onChange={e => updateEmail(e.target.value)} />
                         </Form.Group>
-                        <Form.Group controlId="formBasicBirthday">
+                        <Form.Group controlId="formBirthday">
                             <Form.Label>Birthday</Form.Label>
-                            <Form.Control type="birthday" placeholder="Enter birthday(12/26/1995)" value={birthday} onChange={e => updateBirthday(e.target.value)} />
+                            <Form.Control required type="date" placeholder="your email" onChange={e => updateBirthday(e.target.value)} />
                         </Form.Group>
-                        <Form.Group controlId='updateUser'>
-                            <Button id="update-button" variant="danger" type="submit" onClick={handleUpdate}>Update</Button>
+                        <Form.Group controlId='newUser'>
+                            <Button id="updateButton" variant="danger" type="submit" onClick={handleUpdate}>Update</Button>
                         </Form.Group>
                     </Form>
                 </Col>

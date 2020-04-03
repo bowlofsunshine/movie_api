@@ -34,6 +34,7 @@ export function LoginView(props) {
         <Container>
             <Row>
                 <Col>
+                    <br></br><br></br>
                     <Form style={{ width: '16rem' }}>
                         <Form.Group controlId="formBasicEmail">
                             <Form.Label>Username:</Form.Label>
@@ -45,12 +46,10 @@ export function LoginView(props) {
                             <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
                         </Form.Group>
                         <Form.Group>
-                            <Button variant="primary" type="submit" id='loginButton' onClick={handleSubmit}>
+                            <Button className="login-button mr-2" variant="primary" type="submit" id='loginButton' onClick={handleSubmit}>
                                 Log in
                              </Button>
-                        </Form.Group>
-                        <Form.Group controlId='newUser'>
-                            <Link to={'/register'}><Button id="registerButton" variant='danger'>Register</Button></Link>
+                            <Link to={'/register'}><Button className="register-button mr-2" id="registerButton" variant='danger'>Register</Button></Link>
                         </Form.Group>
 
                     </Form>

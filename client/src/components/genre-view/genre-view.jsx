@@ -22,13 +22,7 @@ export class GenreView extends React.Component {
 
         return (
             <div className="genre-view" >
-                <Navbar bg="light" expand="lg">
-                    {/* <Button variant="primary" type="submit" id="logOutButton" onClick={() => this.onLogOut()}>Log out </Button> */}
-                    <Link to={`/`}>
-                        <Button className="button-back" variant="danger">Back to movies</Button>
-                    </Link>
-                </Navbar>
-                <Card>
+                <Card style={{ width: '50rem' }} className="ml-2">
                     <Card.Body>
                         <Card.Title>
                             {genre.Name}
@@ -36,12 +30,14 @@ export class GenreView extends React.Component {
                         <Card.Text>
                             Genre Description: {genre.Description}
                         </Card.Text>
-                        <Card.Text>
-                            <Link to={'/'} onClick={() => history.back()}><Button className="button-back" variant="danger">Back</Button></Link>
-                        </Card.Text>
-                        <Card.Text>
-                            <Link to={`/`}><Button className="button-back" variant="danger">Back to all movies</Button></Link>
-                        </Card.Text>
+                        <ListGroup variant="flush" >
+                            <ListGroup.Item>
+                                <Card.Text>
+                                    <Link to={'/'} onClick={() => history.back()}><Button className="button-back mr-2" variant="outline-danger">Back</Button></Link>
+                                    <Link to={`/`}><Button className="button-back" variant="danger">Back to all movies</Button></Link>
+                                </Card.Text>
+                            </ListGroup.Item>
+                        </ListGroup>
                     </Card.Body>
                 </Card>
             </div>
