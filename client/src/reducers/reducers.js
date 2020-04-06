@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { SET_FILTER, SET_MOVIES } from '../actions/actions';
+import { SET_FILTER, SET_MOVIES, SET_USER, SET_SORT } from '../actions/actions';
 
 //its signature, or identity card
 //Every time an action is dispatched, this reducer will be called, and it’s responsible for addressing the action or not
@@ -30,24 +30,34 @@ function movies(state = [], action) {
             return state;
     }
 }
+
+function loggedinUser(state = [], action) {
+    switch (action.type) {
+        case SET_USER:
+            return action.value;
+        default:
+            return state;
+    }
+}
+
+
 //combined reducer
 //It groups all the reducers together and only passes them the state that they care about: the 
 //filter for the first reducer and the movies for the last one.
-function moviesApp(state = {}, action) {
-    return {
-        visibilityFilter: visibilityFilter(state.visibilityFilter, action),
-        movies: movies(state.movies, action)
-    }
-}
+// function moviesApp(state = {}, action) {
+//     return {
+//         visibilityFilter: visibilityFilter(state.visibilityFilter, action),
+//         movies: movies(state.movies, action)
+//     }
+// }
 //moviesApp is a combined reducer (a reducer made out of other reducers). In order to keep the code clean, it splits into two 
 //smaller reducers. This pattern is so common that Redux comes with a built-in function to implement it:
 
 
 //Here's what the code should look like when the combineReducers function is used:
 
-
-// const moviesApp = combineReducers({
-//     visibilityFilter, movies
-// });
+const moviesApp = combineReducers({
+    visibilityFilter, movies, loggedinUser
+});
 
 export default moviesApp;

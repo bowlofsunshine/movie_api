@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import './profile-view.scss';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
+import {connect} from 'react-redux';
 
 
 export class ProfileView extends React.Component {
@@ -22,7 +23,8 @@ export class ProfileView extends React.Component {
             password: null,
             email: null,
             birthday: null,
-            favoriteMovies: []
+            favoriteMovies: [],
+            movies: []
         };
     }
 
@@ -35,7 +37,6 @@ export class ProfileView extends React.Component {
     }
 
     getUser(token) {
-        let username = localStorage.getItem('user');
         axios.get(`https://myflixyappy1226.herokuapp.com/users/${localStorage.getItem('user')}`, {
             headers: { Authorization: `Bearer ${token}` }
         })
@@ -69,22 +70,21 @@ export class ProfileView extends React.Component {
                 this.setState({
                     user: null
                 });
-                window.open('/', '_self');
+                window.open('/client', '_self');
             })
             .catch(error => {
                 console.log('error deleting account' + error);
             });
     }
 
-    deleteFavoriteMovie(event, favoriteMovie) {
-        event.preventDefault();
-        console.log(favoriteMovie);
+    deleteFavoriteMovie(movieId) {
+        console.log(this.props.movies);
         // send a request to the server for authentication
-        axios.delete(`https://myflixyappy1226.herokuapp.com/users/${localStorage.getItem('user')}/favorites/${favoriteMovie}`, {
+        axios.delete(`https://myflixyappy1226.herokuapp.com/users/${localStorage.getItem('user')}/favorites/${movieId}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         })
             .then(response => {
-                console.log('removed movie from favorites');
+                alert('removed movie from favorites');
                 location.reload();
             })
             .catch(error => {
@@ -106,6 +106,9 @@ export class ProfileView extends React.Component {
             });
     }
 
+    handleChange(e) {
+        this.setState({[e.target.name]: e.target.value})
+    }
 
 
     render() {
@@ -113,40 +116,30 @@ export class ProfileView extends React.Component {
 
         const { movies } = this.props;
 
-        let sortedMovies = [];
-        let arrayMovies = movies.map(m => {
-            for (let i = 0; i < favoriteMovies.length; i++) {
-                const favMov = favoriteMovies[i];
-                if (m._id === favMov) {
-                    sortedMovies.push(m);
-                }
-            }
-        });
+        const favMovieList = this.props.movies.filter(m => this.state.favoriteMovies.includes(m._id));
 
         return (
             <Card className="profile-view ml-2" style={{ width: '32rem' }}>
                 <Card.Body>
-                    <Card.Title className="profile-title">{username}'s Profile</Card.Title>
+                    <Card.Title className="profile-title">{this.state.username}'s Profile</Card.Title>
                     <ListGroup className="list-group-flush" variant="flush">
-                        <ListGroup.Item>Username: {username}</ListGroup.Item>
+                        <ListGroup.Item>Username: {this.state.username}</ListGroup.Item>
                         <ListGroup.Item>Password: ****** </ListGroup.Item>
-                        <ListGroup.Item>Email: {email}</ListGroup.Item>
-                        <ListGroup.Item>Birthday: {birthday && birthday.slice(0, 10)}</ListGroup.Item>
+                        <ListGroup.Item>Email: {this.state.email}</ListGroup.Item>
+                        <ListGroup.Item>Birthday: {this.state.birthday && birthday.slice(0, 10)}</ListGroup.Item>
                         <ListGroup.Item>Favorite Movies:
-                            
-                                {movies && sortedMovies ? (
-                                    <div>
-                                        {sortedMovies.map(favoriteMovie => (
-                                            <ListGroup.Item key={favoriteMovie._id}>
-                                                <Link to={`/movies/${favoriteMovie._id}`}>
-                                                <Button variant="link">{favoriteMovie.Title}</Button>
-                                                </Link>
-                                                <Button className="remove-button float-right" variant="outline-danger" size="sm" onClick={event => this.deleteFavoriteMovie(event, favoriteMovie._id)}>remove movie </Button>
-                                            </ListGroup.Item>
-                                        ))}
-                                    </div>
-                                    ):("You have no favorite movies")}
-                           
+                               
+                        {favoriteMovies.length === 0 &&
+                        <div className="value">No fav movies :(</div>}
+                        {favoriteMovies.length > 0 &&        
+                        <div>                     
+                        {favMovieList.map(m => (
+                            <div key={m._id}>
+                                <Link  to={`/movies/${m._id}`}><Button variant="link">{m.Title}</Button></Link>
+                        <Button className="remove-button float-right" variant="outline-danger" size="sm" onClick={e => this.deleteFavoriteMovie(m._id)}>remove movie</Button>
+                            </div>
+                             
+                      ))}   </div>    }                     
                         </ListGroup.Item>
                         <ListGroup.Item>
                             <Button className="delete-button mr-1" variant="danger" type="submit" onClick={() => this.deleteAccount()}>Delete Account</Button>
@@ -161,6 +154,9 @@ export class ProfileView extends React.Component {
         );
     }
 }
+
+export default connect(({ movies, users }) => ({ movies, users }))(ProfileView);
+
 
     // let sortedMovies = {};
     //     let arrayMovies = []
@@ -181,3 +177,26 @@ export class ProfileView extends React.Component {
     // {arrayMovies.map(function (key, value) {
     //     return <li key={value}>{key}</li>
     // })}
+
+     {/* {movies && sortedMovies ? (
+                                    <div>
+                                        {sortedMovies.map(favoriteMovie => (
+                                            <ListGroup.Item key={favoriteMovie._id}>
+                                                <Link to={`/movies/${favoriteMovie._id}`}>
+                                                <Button variant="link">{favoriteMovie.Title}</Button>
+                                                </Link>
+                                                <Button className="remove-button float-right" variant="outline-danger" size="sm" onClick={event => this.deleteFavoriteMovie(event, favoriteMovie._id)}>remove movie </Button>
+                                            </ListGroup.Item>
+                                        ))}
+                                    </div>
+                                    ):("You have no favorite movies")} */}   
+
+                                            // let sortedMovies = [];
+        // let arrayMovies = movies.map(m => {
+        //     for (let i = 0; i < favoriteMovies.length; i++) {
+        //         const favMov = favoriteMovies[i];
+        //         if (m._id === favMov) {
+        //             sortedMovies.push(m);
+        //         }
+        //     }
+        // });

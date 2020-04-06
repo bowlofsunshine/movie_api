@@ -10,6 +10,14 @@ img {
   margin: 10px;
   margin-top: 5px;
 }
+.container {
+  max-width: 1345px;
+}
+
+.movies-list {
+  max-width: 25%;
+  margin-top: 5px;
+}
 .card {
   display: inline-flex;
 }

@@ -54,11 +54,11 @@ export function RegistrationView(props) {
                         </Form.Group>
                         <Form.Group controlId="formBasicBirthday">
                             <Form.Label>Birthday</Form.Label>
-                            <Form.Control type="birthday" placeholder="Enter birthday(12/26/1995)" value={birthday} onChange={e => setBirthday(e.target.value)} />
+                            <Form.Control type="date" placeholder="Enter birthday(12/26/1995)" value={birthday} onChange={e => setBirthday(e.target.value)} />
                         </Form.Group>
                         <Form.Group>
                             <Button className="register-button mr-2" id="registerButton" variant="danger" type="submit" onClick={handleRegister}>Register</Button>
-                            <Link to={'/'}><Button className="login-button mr-2" id="loginButton =" variant="primary">Login</Button></Link>
+                            <Link to={'/'}><Button className="login-button mr-2" id="loginButton =" variant="primary">Or Login</Button></Link>
                         </Form.Group>
                     </Form>
                 </Col>

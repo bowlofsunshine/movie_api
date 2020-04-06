@@ -12,7 +12,6 @@ const passport = require("passport");
 require("./passport");
 const cors = require("cors");
 app.use(cors());
-// this is a test commit
 app.use(bodyParser.json());
 var auth = require("./auth")(app);
 app.use(express.static("public"));
@@ -128,7 +127,9 @@ app.post(
   //which means 'opposite of isEmpty' in plain english 'is not empty'
   //or user. islength({min: 5}) which means min value of 5 char. are allowed
   [
-    check("Username", "Username is required").isLength({ min: 5 }),
+    check("Username", "Username is required")
+      .not()
+      .isEmpty(),
     check(
       "Username",
       "Username contains non alphanumeric characters - not allowed."

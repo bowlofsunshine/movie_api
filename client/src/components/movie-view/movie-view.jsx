@@ -10,6 +10,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import axios from 'axios';
 
 import "./movie-view.scss"
+import { connect } from 'react-redux';
 
 export class MovieView extends React.Component {
 
@@ -72,3 +73,5 @@ export class MovieView extends React.Component {
         );
     }
 }
+
+export default connect(({ movies }) => ({ movies }))(MovieView);

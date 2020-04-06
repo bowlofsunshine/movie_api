@@ -19,7 +19,9 @@ import { ProfileView } from '../profile-view/profile-view';
 import { ProfileUpdate } from '../profile-view/profile-update';
 import { RegistrationView } from '../registration-view/registration-view';
 import { Link } from "react-router-dom";
-// imported the relevant actions
+// imported the relevant action
+import { setUser } from '../../actions/actions';
+import { setFilter } from '../../actions/actions';
 import { setMovies } from '../../actions/actions';
 import MoviesList from '../movies-list/movies-list';
 
@@ -33,11 +35,7 @@ export class MainView extends React.Component {
 
         //initialize the state to an empty object so we can destructure it later
         this.state = {
-            movies: [],
-            user: null,
-            email: '',
-            birthday: '',
-            userInfo: {}
+            user: null
         };
     }
     getMovies(token) {
@@ -65,13 +63,6 @@ export class MainView extends React.Component {
         localStorage.setItem('user', data.Username);
     }
 
-    // onMovieClick(movie) {
-    //     window.location.hash = '#' + movie._id;
-    //     this.setState({
-    //         selectedMovieId: movie._id
-    //     });
-    // }
-
     //ome of the hooks available in react component 
     componentDidMount() {
         //get the value of the token from localStorage
@@ -82,6 +73,7 @@ export class MainView extends React.Component {
                 user: localStorage.getItem('user')
             });
             this.getMovies(accessToken);
+            this.getUser(accessToken);
         }
     }
 
@@ -98,10 +90,8 @@ export class MainView extends React.Component {
         localStorage.setItem('user', authData.user.Username);
         //this.getMovies(authData) is called and will get the movies from your API once the user is logged in. Note the use of the this keyword, which is a special keyword in JavaScript. this refers to the object itself, in this case, the MainView class.
         this.getMovies(authData.token);
-        // this.setState({
-        //     user: null
-        // })
-        window.open('/', '_self');
+        this.getUser(authData.token);
+        // window.open('/client', '_self');
     }
 
 
@@ -111,7 +101,19 @@ export class MainView extends React.Component {
         this.setState({
             user: null
         })
-        window.open('/', '_self');
+        window.open('/client', '_self');
+    }
+
+    getUser(user, token) {
+        axios.get(`https://myflixyappy1226.herokuapp.com/user/${localStorage.getItem('user')}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(response => {
+                this.props.setUser(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     //this overrides the rendure() method of the superclass, no need to call super() though, as it does nothing by default 
@@ -126,12 +128,13 @@ export class MainView extends React.Component {
         return (
             //tells react-router your routes
             <Router basename="/client">
+
                 <Link to={`/users/${user}`}>
                     <Button className="profile-button ml-2 mr-2" variant="primary">
                         Profile
                             </Button>
                 </Link>
-                <Button className="logout-buttin mr-2" variant="primary" type="submit" id="logOutButton" onClick={() => this.onLogOut()}>Log out </Button>
+                <Button className="logout-button mr-2" variant="primary" type="submit" id="logOutButton" onClick={() => this.onLogOut()}>Log out </Button>
                 <div className="main-view">
                     <Container fluid className="main-view">
 
@@ -162,7 +165,7 @@ export class MainView extends React.Component {
                             }} />
                             <Route path="/users/:Username" render={({ match }) => { return <ProfileView userInfo={userInfo} movies={movies} /> }} />
 
-                            <Route path="/update/:Username" render={({ match }) => { return <ProfileUpdate user={user} userInfo={userInfo} /> }} />
+                            <Route path="/update/:Username" render={({ match }) => { return <ProfileUpdate user={user} userInfo={userInfo} token={token} updateUser={data => this.updateUser(data)} /> }} />
 
 
                         </Row>
@@ -176,7 +179,7 @@ export class MainView extends React.Component {
 }
 
 let mapStateToProps = state => {
-    return { movies: state.movies }
+    return { movies: state.movies, setUser: state.setUser }
 }
 
-export default connect(mapStateToProps, { setMovies })(MainView);
+export default connect(mapStateToProps, { setMovies, setUser })(MainView);
