@@ -101,7 +101,7 @@ export class MainView extends React.Component {
         this.setState({
             user: null
         })
-        window.open('/client', '_self');
+        window.open('/', '_self');
     }
 
     getUser(user, token) {
