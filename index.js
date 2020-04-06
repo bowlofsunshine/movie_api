@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const uuid = require("uuid");
@@ -15,6 +16,11 @@ app.use(cors());
 app.use(bodyParser.json());
 var auth = require("./auth")(app);
 app.use(express.static("public"));
+app.use("/client", express.static(path.join(__dirname, "client", "dist")));
+
+app.get("/client/*", (req, res) => {
+  res.sendFile(path.join(_dirname, "client", "dist", "index.html"));
+});
 
 // Gets the list of data about ALL movies
 app.get("/movies", passport.authenticate("jwt", { session: false }), function (

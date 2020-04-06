@@ -19,6 +19,9 @@ import { ProfileView } from '../profile-view/profile-view';
 import { ProfileUpdate } from '../profile-view/profile-update';
 import { RegistrationView } from '../registration-view/registration-view';
 import { Link } from "react-router-dom";
+// imported the relevant actions
+import { setMovies } from '../../actions/actions';
+import MoviesList from '../movies-list/movies-list';
 
 import "./main-view.scss"
 import Button from 'react-bootstrap/Button';
@@ -43,10 +46,12 @@ export class MainView extends React.Component {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(response => {
+                //extracted out the loop over the movies that renders a bunch of MovieCard components into a new MoviesList component
+                this.props.setMovies(response.data);
                 // Assign the result to the state
-                this.setState({
-                    movies: response.data
-                });
+                // this.setState({
+                //     movies: response.data
+                //});
             })
             .catch(function (error) {
                 console.log(error);
@@ -93,9 +98,9 @@ export class MainView extends React.Component {
         localStorage.setItem('user', authData.user.Username);
         //this.getMovies(authData) is called and will get the movies from your API once the user is logged in. Note the use of the this keyword, which is a special keyword in JavaScript. this refers to the object itself, in this case, the MainView class.
         this.getMovies(authData.token);
-        this.setState({
-            user: null
-        })
+        // this.setState({
+        //     user: null
+        // })
         window.open('/', '_self');
     }
 
@@ -112,14 +117,15 @@ export class MainView extends React.Component {
     //this overrides the rendure() method of the superclass, no need to call super() though, as it does nothing by default 
     render() {
         //if the state isnt initialized this will throw on runtime before the data is initally loaded 
-        const { user, userInfo, token, movies } = this.state;
-
+        const { userInfo, token } = this.state;
+        let { movies } = this.props;
+        let { user } = this.state;
         //before the movie have been loaded 
         if (!movies) return <div className="main-view" />;
 
         return (
             //tells react-router your routes
-            <Router>
+            <Router basename="/client">
                 <Link to={`/users/${user}`}>
                     <Button className="profile-button ml-2 mr-2" variant="primary">
                         Profile
@@ -132,12 +138,14 @@ export class MainView extends React.Component {
 
 
                         <Row>
-
                             {/* //component has a path prop that expresses what it should match
                                 //render() prop that tells it what to render if it matches up with the URL */}
                             <Route exact path='/' render={() => {
                                 if (!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)} />;
-                                return movies.map(m => <MovieCard key={m._id} movie={m} />)
+                                // return movies.map(m => <MovieCard key={m._id} movie={m} />)
+                                //receives the movies from the store in stages: first, the movies state is extracted from the store through the connect() 
+                                //function before being passed as the movies prop for the MainView component.
+                                return <MoviesList movies={movies} />;
                             }} />
                             <Route path="/register" render={() => <RegistrationView />} />
                             {/* path to display a single movie view contains a fixed fragment (movies/:movieId) */}
@@ -166,3 +174,9 @@ export class MainView extends React.Component {
         );
     }
 }
+
+let mapStateToProps = state => {
+    return { movies: state.movies }
+}
+
+export default connect(mapStateToProps, { setMovies })(MainView);
