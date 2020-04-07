@@ -30,7 +30,7 @@ export function ProfileUpdate(props) {
             const data = response.data;
             localStorage.setItem("user", username);
             console.log(data);
-            window.open('/', '_self');
+            window.open('/client', '_self');
             //// the second argument '_self' is necessary so that the page will open in the current tab
         })
             .catch(e => {
