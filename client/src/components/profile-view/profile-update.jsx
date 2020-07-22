@@ -9,14 +9,35 @@ import Col from 'react-bootstrap/Col';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 
+/**
+ * @requires react 
+ * @requires axios
+ * @requires react-bootstrap/Form
+ * @requires react-bootstrap/Button
+ * @requires react-bootstrap/Container
+ * @requires react-bootstrap/Row
+ * @requires react-bootstrap/Col
+ */
+
 export function ProfileUpdate(props) {
 
+    /**
+    * updating the username, password, email, birthday 
+    * @constant {string} username
+    * @constant {string} password
+    * @constant {string} email
+    * @constant {string} birthday
+    */
     const [username, updateUsername] = useState('');
     const [password, updatePassword] = useState('');
     const [email, updateEmail] = useState('');
     const [birthday, updateBirthday] = useState('');
 
-
+    /**
+     * @function handleUpdate
+     * @param {*} e 
+     * @returns {object} updated user data
+     */
     const handleUpdate = (e) => {
         e.preventDefault();
         axios.put(`https://myflixyappy1226.herokuapp.com/users/${localStorage.getItem('user')}`, {

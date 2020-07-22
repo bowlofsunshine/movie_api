@@ -11,6 +11,14 @@ import moviesApp from './reducers/reducers';
 // Import statement to indicate that we need to bundle `./index.scss`
 import './index.scss';
 
+/**
+ * @requires react
+ * @requires react-dom
+ * @requires redux
+ * @requires react-redux
+ * @requires MainView
+ * @requires moviesApp
+ */
 //create the store and wrap the entire app in a provider that comes from React Redux. 
 //That way, the store will be accessible from the entire app.
 const store = createStore(moviesApp);

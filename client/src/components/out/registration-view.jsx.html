@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: registration-view.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: registration-view.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react';
+import axios from 'axios'
+import Form from 'react-bootstrap/Form';
+import PropTypes from 'prop-types';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import { Link } from 'react-router-dom';
+import './registration-view.scss';
+/**
+ * @requires react
+ * @requires axios
+ * @requires react-bootstrap/Form
+ * @requires react-bootstrap/Button
+ * @requires react-bootstrap/Container
+ * @requires react-bootstrap/Row
+ * @requires react-bootstrap/Col
+ * @requires react-router-dom
+ * @requires ./registration-view.scss
+ */
+
+export function RegistrationView(props) {
+    /**
+    * sets the username, password, email, birthday 
+    * @constant {string} username
+    * @constant {string} password
+    * @constant {string} email
+    * @constant {string} birthday
+    */
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [birthday, setBirthday] = useState('');
+
+    /**
+     * registers a new user 
+     * @function handleRegister
+     * @param {object} e 
+     * @returns {string} username 
+     * @returns {string} password 
+     * @returns {string} email 
+     * @returns {string} birthday 
+     */
+    const handleRegister = (e) => {
+        e.preventDefault();
+        axios.post('https://myflixyappy1226.herokuapp.com/users', {
+            Username: username,
+            Password: password,
+            Email: email,
+            Birthday: birthday
+        }).then(response => {
+            const data = response.data;
+            console.log(data);
+            window.open('/client', '_self');
+            //// the second argument '_self' is necessary so that the page will open in the current tab
+        })
+            .catch(e => {
+                console.log('error registering user' + error);
+            });
+    };
+
+    return (
+        &lt;Container>
+            &lt;Row>
+                &lt;Col>
+                    &lt;br>&lt;/br>&lt;br>&lt;/br>
+                    &lt;Form className='registrationForm' style={{ width: '16rem' }}>
+                        &lt;Form.Group controlId="formBasicUsername">
+                            &lt;Form.Label>Username&lt;/Form.Label>
+                            &lt;Form.Control type="username" placeholder="choose username" value={username} onChange={e => setUsername(e.target.value)} />
+                        &lt;/Form.Group>
+                        &lt;Form.Group controlId="formBasicPassword">
+                            &lt;Form.Label>Password&lt;/Form.Label>
+                            &lt;Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+                        &lt;/Form.Group>
+                        &lt;Form.Group controlId="formBasicEmail">
+                            &lt;Form.Label>Email address&lt;/Form.Label>
+                            &lt;Form.Control type="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />
+                        &lt;/Form.Group>
+                        &lt;Form.Group controlId="formBasicBirthday">
+                            &lt;Form.Label>Birthday&lt;/Form.Label>
+                            &lt;Form.Control type="date" placeholder="Enter birthday(12/26/1995)" value={birthday} onChange={e => setBirthday(e.target.value)} />
+                        &lt;/Form.Group>
+                        &lt;Form.Group>
+                            &lt;Button className="register-button mr-2" id="registerButton" variant="danger" type="submit" onClick={handleRegister}>Register&lt;/Button>
+                            &lt;Link to={'/'}>&lt;Button className="login-button mr-2" id="loginButton =" variant="primary">Or Login&lt;/Button>&lt;/Link>
+                        &lt;/Form.Group>
+                    &lt;/Form>
+                &lt;/Col>
+            &lt;/Row>
+        &lt;/Container>
+    );
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#birthday">birthday</a></li><li><a href="global.html#handleRegister">handleRegister</a></li><li><a href="global.html#RegistrationView">RegistrationView</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Wed Jul 22 2020 16:23:10 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

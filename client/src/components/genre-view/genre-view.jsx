@@ -9,6 +9,15 @@ import Navbar from 'react-bootstrap/Navbar';
 
 import "./genre-view.scss";
 
+/**
+ * @requires react
+ * @requires react-bootstrap/Card
+ * @requires react-bootstrap/Button
+ * @requires react-router-dom
+ * @requires react-bootstrap/ListGroup
+ * @requires ./genre-view.scss
+ */
+
 export class GenreView extends React.Component {
     constructor() {
         super();

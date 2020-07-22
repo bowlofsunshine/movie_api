@@ -9,10 +9,35 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import axios from 'axios';
 
+/**
+ * @requires react
+ * @requires react-bootstrap/Form
+ * @requires prop-types
+ * @requires react-bootstrap/Container
+ * @requires react-bootstrap/Button
+ * @requires react-router-dom
+ * @requires react-bootstrap/ListGroup
+ * @requires react-bootstrap/Row
+ * @requires react-bootstrap/Col
+ * @requires ./login-view.scss
+ * @requires axios
+ */
+
 export function LoginView(props) {
+    /**
+     * setting the username & password
+     * @constant {string} username
+     * @constant {string} password
+     */
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    /**
+     * user is logged in
+     * @function handleSubmit
+     * @param {*} e 
+     * @returns {object} data
+     */
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(username, password);

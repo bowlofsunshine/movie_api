@@ -8,7 +8,14 @@ import { Link } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import "./movie-card.scss";
 
-
+/**
+ * @requires react
+ * @requires prop-types 
+ * @requires react-bootstrap/Button
+ * @requires react-bootstrap/Card
+ * @requires react-router-dom
+ * @requires ./movie-card.scss
+ */
 
 export class MovieCard extends React.Component {
     render() {

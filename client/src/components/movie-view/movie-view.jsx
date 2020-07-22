@@ -11,6 +11,16 @@ import axios from 'axios';
 
 import "./movie-view.scss"
 import { connect } from 'react-redux';
+/**
+ * @requires react 
+ * @requires react-bootstrap/Card
+ * @requires react-bootstrap/Button
+ * @requires react-router-dom
+ * @requires react-bootstrap/ListGroup
+ * @requires axios
+ * @requires ./movie-view.scss
+ * @requires react-redux
+ */
 
 export class MovieView extends React.Component {
 
@@ -19,6 +29,12 @@ export class MovieView extends React.Component {
         this.state = {};
     }
 
+    /**
+     * when clicked adds movie to users favorites list 
+     * @function addFavoriteMovie
+     * @param {object} e 
+     * @returns {console.log} confirming movie was added
+     */
     addFavoriteMovie(e) {
         const { movie } = this.props;
         e.preventDefault();

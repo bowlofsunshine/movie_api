@@ -5,7 +5,18 @@ import { connect } from 'react-redux';
 import Form from 'react-bootstrap/Form';
 
 import { setFilter } from '../../actions/actions';
-
+/**
+ * @requires react
+ * @requires react-redux
+ * @requires react-bootstrap/Form
+ * @requires setFilter
+ */
+/**
+ * a wrapper around a React Bootstrap text input
+ * @function VisibilityFilterInput
+ * @param {*} props 
+ * @returns {Form.Control} 
+ */
 //created a new function component (it has no state and doesn’t need lifecycle hooks, so you don’t need a class component) 
 //that's basically a wrapper around a React Bootstrap text input (a.k.a. Form.Control)
 function VisibilityFilterInput(props) {

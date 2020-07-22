@@ -9,6 +9,15 @@ import Navbar from 'react-bootstrap/Navbar';
 
 import "./director-view.scss";
 
+/**
+ * @requires react
+ * @requires react-bootstrap/Card
+ * @requires react-bootstrap/Button
+ * @requires react-router-dom
+ * @requires react-bootstrap/ListGroup
+ * @requires ./director-view.scss
+ */
+
 export class DirectorView extends React.Component {
     constructor() {
         super();

@@ -8,14 +8,40 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Link } from 'react-router-dom';
 import './registration-view.scss';
-
+/**
+ * @requires react
+ * @requires axios
+ * @requires react-bootstrap/Form
+ * @requires react-bootstrap/Button
+ * @requires react-bootstrap/Container
+ * @requires react-bootstrap/Row
+ * @requires react-bootstrap/Col
+ * @requires react-router-dom
+ * @requires ./registration-view.scss
+ */
 
 export function RegistrationView(props) {
+    /**
+    * sets the username, password, email, birthday 
+    * @constant {string} username
+    * @constant {string} password
+    * @constant {string} email
+    * @constant {string} birthday
+    */
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [birthday, setBirthday] = useState('');
 
+    /**
+     * registers a new user 
+     * @function handleRegister
+     * @param {object} e 
+     * @returns {string} username 
+     * @returns {string} password 
+     * @returns {string} email 
+     * @returns {string} birthday 
+     */
     const handleRegister = (e) => {
         e.preventDefault();
         axios.post('https://myflixyappy1226.herokuapp.com/users', {

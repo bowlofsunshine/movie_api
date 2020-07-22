@@ -1,4 +1,32 @@
-import React, { useState } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: profile-view.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: profile-view.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import PropTypes from 'prop-types';
@@ -152,38 +180,38 @@ export class ProfileView extends React.Component {
         const favMovieList = this.props.movies.filter(m => this.state.favoriteMovies.includes(m._id));
 
         return (
-            <Card className="profile-view ml-2" style={{ width: '32rem' }}>
-                <Card.Body>
-                    <Card.Title className="profile-title">{this.state.username}'s Profile</Card.Title>
-                    <ListGroup className="list-group-flush" variant="flush">
-                        <ListGroup.Item>Username: {this.state.username}</ListGroup.Item>
-                        <ListGroup.Item>Password: ****** </ListGroup.Item>
-                        <ListGroup.Item>Email: {this.state.email}</ListGroup.Item>
-                        <ListGroup.Item>Birthday: {this.state.birthday && birthday.slice(0, 10)}</ListGroup.Item>
-                        <ListGroup.Item>Favorite Movies:
+            &lt;Card className="profile-view ml-2" style={{ width: '32rem' }}>
+                &lt;Card.Body>
+                    &lt;Card.Title className="profile-title">{this.state.username}'s Profile&lt;/Card.Title>
+                    &lt;ListGroup className="list-group-flush" variant="flush">
+                        &lt;ListGroup.Item>Username: {this.state.username}&lt;/ListGroup.Item>
+                        &lt;ListGroup.Item>Password: ****** &lt;/ListGroup.Item>
+                        &lt;ListGroup.Item>Email: {this.state.email}&lt;/ListGroup.Item>
+                        &lt;ListGroup.Item>Birthday: {this.state.birthday &amp;&amp; birthday.slice(0, 10)}&lt;/ListGroup.Item>
+                        &lt;ListGroup.Item>Favorite Movies:
                                
-                        {favoriteMovies.length === 0 &&
-                        <div className="value">No fav movies :(</div>}
-                        {favoriteMovies.length > 0 &&        
-                        <div>                     
+                        {favoriteMovies.length === 0 &amp;&amp;
+                        &lt;div className="value">No fav movies :(&lt;/div>}
+                        {favoriteMovies.length > 0 &amp;&amp;        
+                        &lt;div>                     
                         {favMovieList.map(m => (
-                            <div key={m._id}>
-                                <Link  to={`/movies/${m._id}`}><Button variant="link">{m.Title}</Button></Link>
-                        <Button className="remove-button float-right" variant="outline-danger" size="sm" onClick={e => this.deleteFavoriteMovie(m._id)}>remove movie</Button>
-                            </div>
+                            &lt;div key={m._id}>
+                                &lt;Link  to={`/movies/${m._id}`}>&lt;Button variant="link">{m.Title}&lt;/Button>&lt;/Link>
+                        &lt;Button className="remove-button float-right" variant="outline-danger" size="sm" onClick={e => this.deleteFavoriteMovie(m._id)}>remove movie&lt;/Button>
+                            &lt;/div>
                              
-                      ))}   </div>    }                     
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                            <Button className="delete-button mr-1" variant="danger" type="submit" onClick={() => this.deleteAccount()}>Delete Account</Button>
-                            <Link to={`/update/${username}`}><Button className="update-button mr-1" variant="primary">Update Account</Button></Link>
-                            <Link to={`/`}>
-                                <Button className="button-back mr-1" variant="danger">Back to movies</Button>
-                            </Link>
-                        </ListGroup.Item>
-                    </ListGroup>
-                </Card.Body>
-            </Card >
+                      ))}   &lt;/div>    }                     
+                        &lt;/ListGroup.Item>
+                        &lt;ListGroup.Item>
+                            &lt;Button className="delete-button mr-1" variant="danger" type="submit" onClick={() => this.deleteAccount()}>Delete Account&lt;/Button>
+                            &lt;Link to={`/update/${username}`}>&lt;Button className="update-button mr-1" variant="primary">Update Account&lt;/Button>&lt;/Link>
+                            &lt;Link to={`/`}>
+                                &lt;Button className="button-back mr-1" variant="danger">Back to movies&lt;/Button>
+                            &lt;/Link>
+                        &lt;/ListGroup.Item>
+                    &lt;/ListGroup>
+                &lt;/Card.Body>
+            &lt;/Card >
         );
     }
 }
@@ -195,7 +223,7 @@ export default connect(({ movies, users }) => ({ movies, users }))(ProfileView);
     //     let arrayMovies = []
     //     if (movies != null) {
     //         Object.entries(movies).map(([key, value]) => {
-    //             for (var i = 0; i < favoriteMovies.length; i++) {
+    //             for (var i = 0; i &lt; favoriteMovies.length; i++) {
     //                 if (value["_id"] == favoriteMovies[i]) {
     //                     sortedMovies[favoriteMovies[i]] = { "title": value["Title"] };
     //                     arrayMovies.push(sortedMovies[value["_id"]]["title"]);
@@ -208,28 +236,50 @@ export default connect(({ movies, users }) => ({ movies, users }))(ProfileView);
     //     }
 
     // {arrayMovies.map(function (key, value) {
-    //     return <li key={value}>{key}</li>
+    //     return &lt;li key={value}>{key}&lt;/li>
     // })}
 
-     {/* {movies && sortedMovies ? (
-                                    <div>
+     {/* {movies &amp;&amp; sortedMovies ? (
+                                    &lt;div>
                                         {sortedMovies.map(favoriteMovie => (
-                                            <ListGroup.Item key={favoriteMovie._id}>
-                                                <Link to={`/movies/${favoriteMovie._id}`}>
-                                                <Button variant="link">{favoriteMovie.Title}</Button>
-                                                </Link>
-                                                <Button className="remove-button float-right" variant="outline-danger" size="sm" onClick={event => this.deleteFavoriteMovie(event, favoriteMovie._id)}>remove movie </Button>
-                                            </ListGroup.Item>
+                                            &lt;ListGroup.Item key={favoriteMovie._id}>
+                                                &lt;Link to={`/movies/${favoriteMovie._id}`}>
+                                                &lt;Button variant="link">{favoriteMovie.Title}&lt;/Button>
+                                                &lt;/Link>
+                                                &lt;Button className="remove-button float-right" variant="outline-danger" size="sm" onClick={event => this.deleteFavoriteMovie(event, favoriteMovie._id)}>remove movie &lt;/Button>
+                                            &lt;/ListGroup.Item>
                                         ))}
-                                    </div>
+                                    &lt;/div>
                                     ):("You have no favorite movies")} */}   
 
                                             // let sortedMovies = [];
         // let arrayMovies = movies.map(m => {
-        //     for (let i = 0; i < favoriteMovies.length; i++) {
+        //     for (let i = 0; i &lt; favoriteMovies.length; i++) {
         //         const favMov = favoriteMovies[i];
         //         if (m._id === favMov) {
         //             sortedMovies.push(m);
         //         }
         //     }
-        // });
+        // });</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ProfileView.html">ProfileView</a></li></ul><h3>Global</h3><ul><li><a href="global.html#birthday">birthday</a></li><li><a href="global.html#deleteAccount">deleteAccount</a></li><li><a href="global.html#deleteFavoriteMovie">deleteFavoriteMovie</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#handleChange">handleChange</a></li><li><a href="global.html#handleUpdate">handleUpdate</a></li><li><a href="global.html#ProfileUpdate">ProfileUpdate</a></li><li><a href="global.html#updateAccount">updateAccount</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Wed Jul 22 2020 16:23:04 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
